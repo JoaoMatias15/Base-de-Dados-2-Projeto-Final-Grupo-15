@@ -1,0 +1,50 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <h1 class="text-center mb-3">Criar Utilizador</h1>
+        <form method="POST" action="{% url 'criar_utilizador' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" class="form-control" id="nome" name="nome" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <div class="form-group">
+            <label for="tipo">Tipo de Utilizador</label>
+            <select class="form-control" id="tipoUtilizador" name="tipoUtilizador">
+              <option value="Administrador">Administrador</option>
+              <option value="Cliente">Cliente</option>
+              <option value="Comercial1">Comercial1</option>
+              <option value="Comercial2">Comercial2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="NIF">NIF</label>
+            <input type="text" class="form-control" id="NIF" name="NIF" required>
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone</label>
+            <input type="text" class="form-control" id="telefone" name="telefone" required>
+          </div>
+          <div class="form-group">
+            <label for="estado">Estado</label>
+            <input type="text" class="form-control" id="estado" name="estado" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -31,8 +31,8 @@ from .models import Utilizador, Componente, EncomendaCliente, EncomendaComponent
 class CreateUserForm(ModelForm):
     class Meta:
         model = Utilizador
-        fields = ["nome","email","password", "NIF","telemovel"]
-        labels = {'nome': "Nome", 'email': "Email",'NIF': "NIF", 'telemovel': "Telemovel"}
+        fields = ["nome","email","password", "NIF","telemovel","morada_utilizador"]
+        labels = {'nome': "Nome", 'email': "Email",'NIF': "NIF", 'telemovel': "Telemovel",'morada_utilizador':"Morada"}
         
 class AuthForm(ModelForm):
     class Meta:
