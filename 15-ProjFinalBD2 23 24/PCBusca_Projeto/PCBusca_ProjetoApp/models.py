@@ -7,7 +7,7 @@ class TipoUtilizador(models.Model):
 
 class Utilizador(models.Model):
     id_utilizador = models.AutoField(primary_key=True)
-    #TODO:Verificar os models por causa das FKs de Fatura e Encomenda (
+    #TODO:Verificar os models por causa das FKs de Fatura e Encomendas
     #fatura_utilizador = models.ForeignKey('FaturaCliente', on_delete=models.SET_NULL, null=True)
     #encomenda_utilizador = models.ForeignKey('EncomendaCliente', on_delete=models.SET_NULL, null=True)
     tipo_utilizador = models.ForeignKey('TipoUtilizador', on_delete=models.SET_NULL, null=True)
@@ -65,6 +65,7 @@ class Equipamento(models.Model):
     
 
 class FaturaCliente(models.Model):
+    #TODO: Adicionar id utilizador(Secalhar nem e necessario pois podemos obter o utilizador atraves da Encomenda!!)
     id_fatura_cliente = models.AutoField(primary_key=True)
     encomenda_cliente = models.ForeignKey('EncomendaCliente', on_delete=models.SET_NULL, null=True)
     nif_loja = models.IntegerField(null=True)
