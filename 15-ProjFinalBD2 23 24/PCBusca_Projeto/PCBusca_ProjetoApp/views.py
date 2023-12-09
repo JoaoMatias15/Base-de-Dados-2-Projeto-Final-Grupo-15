@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db import connections
 import json
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -11,7 +12,7 @@ from django.forms import ModelForm
 from django import forms
 
 from .filters import EquipamentoFilter
-from .forms import CreateUserForm,AuthForm
+from .forms import CreateUserForm,AuthForm,UtilizadorForm
 from .models import Utilizador
 from .models import Equipamento
 
@@ -39,6 +40,7 @@ def registerPage(request):
             utilizador.NIF = form.cleaned_data['NIF'] 
             utilizador.telemovel = form.cleaned_data['telemovel'] 
             #utilizador.tipoCliente = 'Cliente'
+            view_insert_user(request)
             form.save()
             return redirect('index')
     return render(request, 'auth/register.html', context)
@@ -162,6 +164,59 @@ def index(request):
 #         return response#página de sucesso de encomenda
 #     # Pass the products and cart quantities to the template
 #     return render(request, 'cliente/cart.html', {'products': products, 'cart': cart})
+
+def bomdia_admin(request):
+    context = {}
+    return render(request,'admin/bomdia_admin.html',context)
+
+#Gerir Utilizadores 
+def listar_utilizadores(request):
+    utilizadores = Utilizador.objects.all()
+    context = {'utilizadores': utilizadores}
+    return render(request, 'admin/listar_utilizadores.html', context)
+
+def criar_utilizador(request):
+    form = UtilizadorForm(request.POST or None)
+    print(form.errors)
+    if form.is_valid():
+        form.save()
+        return redirect('listar_utilizadores')
+    return render(request, 'admin/criar_utilizador.html', {'form': form})
+
+def editar_utilizador(request, id):
+    utilizador = Utilizador.objects.get(id=id)
+    form = UtilizadorForm(request.POST or None, instance=utilizador)
+    if form.is_valid():
+        form.save()
+        return redirect('listar_utilizadores')
+    return render(request, 'admin/editar_utilizador.html', {'form': form, 'utilizador': utilizador})
+
+def apagar_utilizador(request, id):
+    utilizador = Utilizador.objects.get(id=id)
+    if request.method == 'POST':
+        utilizador.delete()
+        messages.success(request, f'Utilizador {utilizador.nome} foi excluido com sucesso!')
+    return redirect('listar_utilizadores')
+
+
+
+def view_insert_user(request):
+    # Get the database connection
+    with connections['postgres'].cursor() as cursor:
+        # Call the PostgreSQL function
+        cursor.callproc('insert_into_utilizador', [
+            'morada_utilizador', 'nome', 'email', 'telemovel', None, None, None, None,'password',  # Pass your function arguments here
+        ])
+        
+        # If your function returns something, fetch the result
+        result = cursor.fetchall()
+        
+    # Process the result or perform further actions
+    # ...
+
+    # Return an HTTP response or render a template
+    print(result)
+    return render(request, 'auth/register.html')
 
 
 

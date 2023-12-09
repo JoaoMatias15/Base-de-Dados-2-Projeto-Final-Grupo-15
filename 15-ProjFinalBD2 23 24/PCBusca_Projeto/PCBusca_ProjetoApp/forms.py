@@ -47,6 +47,13 @@ class ClienteForm(forms.ModelForm):
         labels = {'nome': "Nome", 'email': "Email",'NIF': "NIF", 'telemovel': "Telemovel"}
         exclude = ['id_cliente', 'id_fatura_cliente', 'id_encomenda_cliente']
 
+class UtilizadorForm(ModelForm):
+    class Meta:
+        model=Utilizador
+        fields = ["nome","email","password", "NIF","telemovel"]
+        labels = {'nome': "Nome", 'email': "Email",'NIF': "NIF", 'telemovel': "Telemovel"}
+        #exclude = ['id_cliente', 'id_fatura_cliente', 'id_encomenda_cliente']
+
 
 class ComponenteForm(forms.ModelForm):
     class Meta:
