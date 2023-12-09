@@ -7,7 +7,8 @@ class TipoUtilizador(models.Model):
 
 class Utilizador(models.Model):
     id_utilizador = models.AutoField(primary_key=True)
-    fatura_utilizador = models.ForeignKey('FaturaCliente', on_delete=models.SET_NULL, null=True)
+    #TODO:Verificar os models por causa das FKs de Fatura e Encomenda (
+    #fatura_utilizador = models.ForeignKey('FaturaCliente', on_delete=models.SET_NULL, null=True)
     #encomenda_utilizador = models.ForeignKey('EncomendaCliente', on_delete=models.SET_NULL, null=True)
     tipo_utilizador = models.ForeignKey('TipoUtilizador', on_delete=models.SET_NULL, null=True)
     morada_utilizador = models.CharField(max_length=256, null=True)

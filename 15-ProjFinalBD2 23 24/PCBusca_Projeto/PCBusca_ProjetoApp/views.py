@@ -30,9 +30,10 @@ def registerPage(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             email_Form = form.cleaned_data['email']
-            if Utilizador.objects.filter(email=email_Form).exists():
-                form.add_error('email', 'Já tens conta!')
-                return render(request, 'auth/register.html', context)
+            #TODO:  Verificar se utilizador existe(Nota: Usar uma função de check email e dar throw (ver login))!!!!!!!!!!!!!!
+            #if Utilizador.objects.filter(email=email_Form).exists():
+                #form.add_error('email', 'Já tens conta!')
+                #return render(request, 'auth/register.html', context)
             utilizador = form.save(commit=False)
             utilizador.nome = form.cleaned_data['nome']
             utilizador.email = email_Form
@@ -40,8 +41,23 @@ def registerPage(request):
             utilizador.NIF = form.cleaned_data['NIF'] 
             utilizador.telemovel = form.cleaned_data['telemovel'] 
             #utilizador.tipoCliente = 'Cliente'
-            view_insert_user(request)
-            form.save()
+            # Get the database connection
+            with connections['postgres'].cursor() as cursor:
+                # Call the PostgreSQL function
+                cursor.callproc('insert_into_utilizador', [
+                    form.cleaned_data['morada'], form.cleaned_data['nome'], email_Form, form.cleaned_data['telemovel'] , None, None, None, None,make_password(form.cleaned_data['password']),  # Pass your function arguments here
+                ])
+                
+                # If your function returns something, fetch the result
+                result = cursor.fetchall()
+                
+            # Process the result or perform further actions
+            # ...
+
+            # Return an HTTP response or render a template
+            print(result)
+            #return render(request, 'auth/register.html')
+            #form.save()
             return redirect('index')
     return render(request, 'auth/register.html', context)
 
