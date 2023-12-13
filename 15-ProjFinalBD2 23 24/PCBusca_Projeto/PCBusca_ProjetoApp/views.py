@@ -206,12 +206,16 @@ def criar_utilizador(request):
     return render(request, 'admin/criar_utilizador.html', {'form': form})
 
 def editar_utilizador(request, id):
-    utilizador = Utilizador.objects.get(id=id)
-    form = UtilizadorForm(request.POST or None, instance=utilizador)
-    if form.is_valid():
-        form.save()
-        return redirect('listar_utilizadores')
-    return render(request, 'admin/editar_utilizador.html', {'form': form, 'utilizador': utilizador})
+    user=cursor.callproc('get_user_by_id', [
+        id
+    ])
+    #TODO: Meter no editUtilizador.html aquilo a preencher os campos com os dados da base de dados
+    #form = UtilizadorForm(request.POST or None, instance=utilizador)
+    if request.method == 'POST':
+        cursor.callproc('update_user', [
+            id, form.cleaned_data['morada_utilizador'],form.cleaned_data['nome'], form.cleaned_data['email'], form.cleaned_data['telefone'], form.cleaned_data['NIF'] , None
+        ])
+    return render(request, 'admin/editar_utilizador.html', {'user': user})
 
 def apagar_utilizador(request, id):
     utilizador = Utilizador.objects.get(id=id)
