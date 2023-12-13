@@ -6,29 +6,30 @@
   <thead>
       <tr>
         <th>Nome</th>
-        <th>Tipo de Utilizador</th>
+        <th>Morada</th>
         <th>Email</th>
         <th>NIF</th>
         <th>Telefone</th>
         <th>Estado</th>
+        <th>Opções</th>
       </tr>
   </thead>
   <tbody>
     {% for user in utilizadores %}
     <tr>
       <td>{{ user.2 }}</td>  {# nome #}
-      <td>{{ user.9 }}</td>  {# tipo_utilizador_id #}
+      <td>{{ user.1 }}</td>  {# morada #}
       <td>{{ user.3 }}</td>  {# email #}
       <td>{{ user.5 }}</td>  {# NIF #}
       <td>{{ user.4 }}</td>  {# telemovel #}
       <td>{{ user.8 }}</td>  {# estado #}
       <td>
         {% if user.0 %}
-          {% comment %} <a href="{% url 'PCBusca_ProjetoApp:editar_utilizador' user.0 %}" class="btn btn-primary">Editar</a> {% endcomment %}
-          {% comment %} <form method="post" action="{% url 'PCBusca_ProjetoApp:apagar_utilizador' user.0 %}">
+          <a href="{% url 'editar_utilizador' user.0 %}" class="btn btn-primary">Editar</a>
+           <form method="post" action="{% url 'apagar_utilizador' user.0 %}">
             {% csrf_token %}
             <input type="submit" value="Excluir" class="btn btn-danger">
-          </form> {% endcomment %}
+          </form> 
         {% else %}
           <p>ID indisponível</p>
         {% endif %}

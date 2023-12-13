@@ -34,12 +34,12 @@ def registerPage(request):
             #if Utilizador.objects.filter(email=email_Form).exists():
                 #form.add_error('email', 'Já tens conta!')
                 #return render(request, 'auth/register.html', context)
-            utilizador = form.save(commit=False)
-            utilizador.nome = form.cleaned_data['nome']
-            utilizador.email = email_Form
-            utilizador.password = make_password(form.cleaned_data['password'])
-            utilizador.NIF = form.cleaned_data['NIF'] 
-            utilizador.telemovel = form.cleaned_data['telemovel'] 
+            # utilizador = form.save(commit=False)
+            # utilizador.nome = form.cleaned_data['nome']
+            # utilizador.email = email_Form
+            # utilizador.password = make_password(form.cleaned_data['password'])
+            # utilizador.NIF = form.cleaned_data['NIF'] 
+            # utilizador.telemovel = form.cleaned_data['telemovel'] 
             #utilizador.tipoCliente = 'Cliente'
             # Get the database connection
             with connections['postgres'].cursor() as cursor:
@@ -52,7 +52,7 @@ def registerPage(request):
                     return render(request, 'auth/register.html', context)
                 # Call the PostgreSQL function
                 cursor.callproc('insert_into_utilizador', [
-                    form.cleaned_data['morada_utilizador'], form.cleaned_data['nome'], email_Form, form.cleaned_data['telemovel'] , None, None, None, None,make_password(form.cleaned_data['password'],'Bd2'),  # Pass your function arguments here
+                    form.cleaned_data['morada_utilizador'], form.cleaned_data['nome'], email_Form, form.cleaned_data['telemovel'] , form.cleaned_data['NIF'], None, None, None,make_password(form.cleaned_data['password'],'Bd2'),  # Pass your function arguments here
                 ])
                 
                 # If your function returns something, fetch the result
