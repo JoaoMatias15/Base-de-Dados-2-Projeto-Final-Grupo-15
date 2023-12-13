@@ -225,7 +225,7 @@ def editar_utilizador(request, id):
             id
         ])
         user = cursor.fetchone()
-    #TODO: Meter no editUtilizador.html aquilo a preencher os campos com os dados da base de dados
+    #TODO: Meter isto a editar, nao esta a enviar os dados para a base de dados
     print(user)
     form = UtilizadorForm2(request.POST, initial={
             'nome': user[2],
