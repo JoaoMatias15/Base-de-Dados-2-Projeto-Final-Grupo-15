@@ -12,7 +12,7 @@ from django.forms import ModelForm
 from django import forms
 
 from .filters import EquipamentoFilter
-from .forms import CreateUserForm,AuthForm,UtilizadorForm
+from .forms import CreateUserForm,AuthForm,UtilizadorForm,UtilizadorForm2
 from .models import Utilizador
 from .models import Equipamento
 
@@ -205,16 +205,48 @@ def criar_utilizador(request):
         return redirect('listar_utilizadores')
     return render(request, 'admin/criar_utilizador.html', {'form': form})
 
+# def editar_utilizador(request, id):
+#     with connections['postgres'].cursor() as cursor:
+#         cursor.callproc('get_user_by_id', [
+#             id
+#         ])
+#         user = cursor.fetchall()
+#     #TODO: Meter no editUtilizador.html aquilo a preencher os campos com os dados da base de dados
+#     form = UtilizadorForm(request.POST )
+#     if request.method == 'POST':
+#         cursor.callproc('update_user', [
+#             id, form.cleaned_data['morada_utilizador'],form.cleaned_data['nome'], form.cleaned_data['email'], form.cleaned_data['telefone'], form.cleaned_data['NIF'] , None
+#         ])
+#     return render(request, 'admin/editar_utilizador.html', {'user': user})
+
 def editar_utilizador(request, id):
-    user=cursor.callproc('get_user_by_id', [
-        id
-    ])
-    #TODO: Meter no editUtilizador.html aquilo a preencher os campos com os dados da base de dados
-    #form = UtilizadorForm(request.POST or None, instance=utilizador)
-    if request.method == 'POST':
-        cursor.callproc('update_user', [
-            id, form.cleaned_data['morada_utilizador'],form.cleaned_data['nome'], form.cleaned_data['email'], form.cleaned_data['telefone'], form.cleaned_data['NIF'] , None
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_user_by_id', [
+            id
         ])
+        user = cursor.fetchone()
+    #TODO: Meter no editUtilizador.html aquilo a preencher os campos com os dados da base de dados
+    print(user)
+    form = UtilizadorForm2(request.POST, initial={
+            'nome': user[2],
+            'morada_utilizador': user[1],
+            'email': user[3],
+            'NIF': user[5],
+            'telefone': user[4],
+        })
+    if request.method == 'POST':
+        if form.is_valid():
+            with connections['postgres'].cursor() as cursor:
+                cursor.callproc('update_user', [
+                    id,
+                    form.cleaned_data['morada_utilizador'],
+                    form.cleaned_data['nome'],
+                    form.cleaned_data['email'],
+                    form.cleaned_data['telefone'],
+                    form.cleaned_data['NIF'],
+                    None
+                ])
+            return redirect('listar_utilizadores')    
     return render(request, 'admin/editar_utilizador.html', {'user': user})
 
 def apagar_utilizador(request, id):
