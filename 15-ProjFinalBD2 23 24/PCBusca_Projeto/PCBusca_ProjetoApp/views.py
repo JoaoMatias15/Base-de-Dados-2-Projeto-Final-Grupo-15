@@ -52,15 +52,13 @@ def registerPage(request):
                     return render(request, 'auth/register.html', context)
                 # Call the PostgreSQL function
                 cursor.callproc('insert_into_utilizador', [
-                    form.cleaned_data['morada_utilizador'], form.cleaned_data['nome'], email_Form, form.cleaned_data['telemovel'] , form.cleaned_data['NIF'], None, None, None,make_password(form.cleaned_data['password'],'Bd2'),  # Pass your function arguments here
+                    form.cleaned_data['morada_utilizador'], form.cleaned_data['nome'], email_Form, form.cleaned_data['telemovel'] , form.cleaned_data['NIF'], None,make_password(form.cleaned_data['password'],'Bd2'),  # Pass your function arguments here
                 ])
                 
                 # If your function returns something, fetch the result
                 result = cursor.fetchall()
-                
             # Process the result or perform further actions
             # ...
-
             # Return an HTTP response or render a template
             print(result)
             #return render(request, 'auth/register.html')
