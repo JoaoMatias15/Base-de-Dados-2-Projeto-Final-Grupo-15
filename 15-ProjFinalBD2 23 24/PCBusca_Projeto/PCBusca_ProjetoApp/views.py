@@ -232,20 +232,27 @@ def editar_utilizador(request, id):
             'morada_utilizador': user[1],
             'email': user[3],
             'NIF': user[5],
-            'telefone': user[4],
+            'telemovel': user[4],
         })
     if request.method == 'POST':
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print(form.errors)
+        print('--------------------------------------------------------------------------------------------------------------------------')
         if form.is_valid():
+            print('--------------------------------------------------------------------------------------------------------------------------')
+            print('ola')
+            print('--------------------------------------------------------------------------------------------------------------------------')
             with connections['postgres'].cursor() as cursor:
-                cursor.callproc('update_user', [
-                    id,
-                    form.cleaned_data['morada_utilizador'],
-                    form.cleaned_data['nome'],
-                    form.cleaned_data['email'],
-                    form.cleaned_data['telefone'],
-                    form.cleaned_data['NIF'],
-                    None
-                ])
+                cursor.execute("CALL update_user(%s, %s, %s, %s, %s, %s)",
+                               [id, form.cleaned_data['morada_utilizador'],
+                                form.cleaned_data['nome'],
+                                form.cleaned_data['email'],
+                                form.cleaned_data['telemovel'],
+                                form.cleaned_data['NIF']
+                                ])
+                print('--------------------------------------------------------------------------------------------------------------------------')
+                print('adeus')
+                print('--------------------------------------------------------------------------------------------------------------------------')
             return redirect('listar_utilizadores')    
     return render(request, 'admin/editar_utilizador.html', {'user': user})
 
