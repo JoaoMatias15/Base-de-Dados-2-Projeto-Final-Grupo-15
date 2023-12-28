@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import make_password,check_password
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.forms import ModelForm
+from forms import *
 from django import forms
 
 from .filters import EquipamentoFilter
@@ -282,4 +283,54 @@ def apagar_utilizador(request, id):
 #     return render(request, 'auth/register.html')
 
 
+def trocarEstado(request, id):
+    with connections['postgres'].cursor() as cursor:
+                cursor.execute("CALL trocar_estado_utilizador(%s)",
+                               [id
+                                ])
+    return redirect('listar_utilizadores')
+
+##########Fornecedores
+def listar_fornecedores(request):
+    with connections['postgres'].cursor() as cursor:       
+        cursor.callproc('get_fornecedores_data')
+        fornecedores = cursor.fetchall()
+    context = {'fornecedores': fornecedores}
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    print(fornecedores)
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    return render(request, 'admin/listar_fornecedores.html', context)
+
+
+
+def editar_fornecedores(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_forn_by_id', [
+            id
+        ])
+        forn = cursor.fetchone()
+    #TODO: Meter isto a editar, nao esta a enviar os dados para a base de dados
+    print(forn)
+    form = FornecedorForm(request.POST, initial={
+            'nome_fornecedor': forn[1],
+            'morada_fornecedor': forn[2],
+            'email_fornecedor': forn[4],
+            'nif': forn[3],
+            'telemovel_fornecedor': forn[5],
+        })
+    if request.method == 'POST':
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print(form.errors)
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        if form.is_valid():
+            with connections['postgres'].cursor() as cursor:
+                cursor.execute("CALL update_forn(%s, %s, %s, %s, %s, %s)",
+                               [id, form.cleaned_data['nome_fornecedor'],
+                                form.cleaned_data['morada_fornecedor'],
+                                form.cleaned_data['email_fornecedor'],
+                                form.cleaned_data['nif'],
+                                form.cleaned_data['telemovel_fornecedor']
+                                ])
+            return redirect('listar_utilizadores')    
+    return render(request, 'admin/editar_utilizador.html', {'forn': forn})
 

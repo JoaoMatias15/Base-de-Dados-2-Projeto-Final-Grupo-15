@@ -15,7 +15,9 @@ class Utilizador(models.Model):
     nome = models.CharField(max_length=256, null=True)
     email = models.CharField(max_length=256, null=True)
     telemovel = models.DecimalField(max_digits=10, decimal_places=0, null=True)
-    NIF = models.DecimalField(max_digits=15, decimal_places=0, null=True) 
+    NIF = models.DecimalField(max_digits=15, decimal_places=0, null=True)
+    estado = models.BooleanField(null=True)
+    data_desativado = models.DateTimeField(null=True)
     password = models.CharField(max_length=256, null=True)   
 
 class Componente(models.Model):
@@ -38,7 +40,7 @@ class EncomendaCliente(models.Model):
     morada_armazem = models.CharField(max_length=256, null=True)
     morada_cliente = models.CharField(max_length=256, null=True)
     quantidade = models.IntegerField(null=True)
-    data_encomenda_cliente = models.DateField(null=True)
+    data_encomenda_cliente = models.DateTimeField(null=True)
     nome_artigo = models.CharField(max_length=256, null=True)
     telemovel_cliente = models.CharField(max_length=256, null=True)
     metodo_pagamento = models.CharField(max_length=256, null=True)
@@ -74,12 +76,14 @@ class FaturaCliente(models.Model):
     artigo = models.CharField(max_length=256, null=True)
     quantidade = models.IntegerField(null=True)
     preco_total = models.FloatField(null=True)
-    data_emissao_fatura = models.DateField(null=True)
+    data_emissao_fatura = models.DateTimeField(null=True)
 
 class Fornecedor(models.Model):
     id_fornecedor = models.AutoField(primary_key=True)
     nome_fornecedor = models.CharField(max_length=256, null=True)
     morada_fornecedor = models.CharField(max_length=256, null=True)
+    email_fornecedor = models.CharField(max_length=256, null=True)
+    telemovel_fornecedor = models.IntegerField(null=True)
     nif = models.IntegerField(null=True)
 
 class Funcionarios(models.Model):
@@ -95,7 +99,7 @@ class GuiaDeRemessa(models.Model):
     fornecedor = models.ForeignKey('Fornecedor', on_delete=models.SET_NULL, null=True)
     destinatario = models.CharField(max_length=256, null=True)
     nif_destinatario = models.IntegerField(null=True)
-    data_saida_forn = models.DateField(null=True)
+    data_saida_forn = models.DateTimeField(null=True)
     nome_produto = models.CharField(max_length=256, null=True)
     quantidade_produto = models.IntegerField(null=True)
     peso_produto = models.FloatField(null=True)
@@ -132,8 +136,8 @@ class NotasDeEncomenda(models.Model):
     nome_encomenda = models.CharField(max_length=256, null=True)
     morada_fornecedor = models.CharField(max_length=256, null=True)
     valor_total = models.FloatField(null=True)
-    data_de_envio = models.DateField(null=True)
-    data_de_chegada = models.DateField(null=True)
+    data_de_envio = models.DateTimeField(null=True)
+    data_de_chegada = models.DateTimeField(null=True)
 
 class Producao(models.Model):
     id_producao = models.AutoField(primary_key=True)

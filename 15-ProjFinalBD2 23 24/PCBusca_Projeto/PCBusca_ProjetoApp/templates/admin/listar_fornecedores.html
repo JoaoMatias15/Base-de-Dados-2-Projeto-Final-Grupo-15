@@ -1,0 +1,51 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Morada</th>
+      <th>NIF</th>
+      <th>Telefone</th>
+      <th>Email</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for fornecedor in fornecedores %}
+      <tr>
+        <td>{{ fornecedor.1 }}</td>  {# Nome #}
+        <td>{{ fornecedor.2 }}</td>  {# Morada #}
+        <td>{{ fornecedor.3 }}</td>  {# NIF #}
+        <td>{{ fornecedor.5 }}</td>  {# Telefone #}
+        <td>{{ fornecedor.4}}</td>  {# Email #}
+        <td>
+          <!-- {% if fornecedor.id_fornecedor %}
+            <a href="{% url 'editar_fornecedor' fornecedor.id_fornecedor %}" class="btn btn-primary">Editar</a>
+            <form id="removerForm{{ fornecedor.id_fornecedor }}" method="post" action="{% url 'remover_fornecedor' fornecedor.id_fornecedor %}">
+              {% csrf_token %}
+              <button type="button" class="{% if not fornecedor.estado %}btn btn-success{% else %}btn btn-danger{% endif %}" onclick="confirmRemoval('{{ fornecedor.id_fornecedor }}')">
+                {% if not fornecedor.estado %}Ativar{% else %}Desativar{% endif %}
+              </button>
+            </form>
+          {% else %}
+            <p>ID indisponível</p>
+          {% endif %} -->
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  function confirmRemoval(id) {
+    var confirmation = confirm("Tem certeza que deseja remover?");
+    if (confirmation) {
+      document.getElementById('removerForm' + id).submit();
+    }
+  }
+</script>
+
+{% endblock %}

@@ -22,14 +22,25 @@
       <td>{{ user.3 }}</td>  {# email #}
       <td>{{ user.5 }}</td>  {# NIF #}
       <td>{{ user.4 }}</td>  {# telemovel #}
-      <td>{{ user.8 }}</td>  {# estado #}
+      <td>
+        {% if user.8 %}
+            <span style="display: inline-block; width: 20px; height: 20px; background-color: green; border-radius: 50%;"></span>
+        {% else %}
+            <span style="display: inline-block; width: 20px; height: 20px; background-color: red; border-radius: 50%;"></span>
+        {% endif %}
+    </td>
+    
       <td>
         {% if user.0 %}
           <a href="{% url 'editar_utilizador' user.0 %}" class="btn btn-primary">Editar</a>
-           <form method="post" action="{% url 'apagar_utilizador' user.0 %}">
+           
+          <form method="post" action="{% url 'trocar_estado_utilizador' user.0 %}">
             {% csrf_token %}
-            <input type="submit" value="Excluir" class="btn btn-danger">
-          </form> 
+            <button type="submit" class="{% if not user.8 %}btn btn-success{% else %}btn btn-danger{% endif %}">
+                {% if not user.8 %}Ativar{% else %}Desativar{% endif %}
+            </button>
+          </form>
+          
         {% else %}
           <p>ID indisponível</p>
         {% endif %}

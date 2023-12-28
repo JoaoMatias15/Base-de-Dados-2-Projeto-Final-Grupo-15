@@ -15,6 +15,11 @@ urlpatterns =[
     path('admin/listar_utilizadores/', views.listar_utilizadores, name='listar_utilizadores'),
     path('admin/criar_utilizadores/', views.criar_utilizador, name='criar_utilizador'),
     path('admin/editar/<int:id>/', views.editar_utilizador, name='editar_utilizador'),
-    path('admin/apagar/<int:id>/', views.apagar_utilizador, name='apagar_utilizador'),
-
+    #path('admin/apagar/<int:id>/', views.apagar_utilizador, name='apagar_utilizador'),
+    path('admin/trocar_estado_utilizador/<int:id>/', views.trocarEstado,name='trocar_estado_utilizador'),
+    #TODO:
+    path('admin/listar_fornecedores/', views.listar_fornecedores, name='listar_fornecedores'),
+    #path('admin/criar_fornecedores/', views.criar_fornecedores, name='criar_fornecedores'),#needs html
+    #path('admin/editar_fornecedores/<int:id>/', views.editar_fornecedores, name='editar_fornecedores'),#needs html
+    #path('admin/apagar_fornecedores/<int:id>/', views.apagar_fornecedores, name='apagar_fornecedores'),
 ]
