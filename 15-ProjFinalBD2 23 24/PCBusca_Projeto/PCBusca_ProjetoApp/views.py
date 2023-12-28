@@ -280,7 +280,7 @@ def apagar_utilizador(request, id):
 
 #     # Return an HTTP response or render a template
 #     print(result)
-#     return render(request, 'auth/register.html')
+#     return render(request, 'auth/register.html')#Veryggod
 
 
 def trocarEstado(request, id):
