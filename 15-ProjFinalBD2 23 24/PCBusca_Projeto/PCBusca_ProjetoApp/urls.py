@@ -19,7 +19,12 @@ urlpatterns =[
     path('admin/trocar_estado_utilizador/<int:id>/', views.trocarEstado,name='trocar_estado_utilizador'),
     #TODO:
     path('admin/listar_fornecedores/', views.listar_fornecedores, name='listar_fornecedores'),
-    #path('admin/criar_fornecedores/', views.criar_fornecedores, name='criar_fornecedores'),#needs html
-    #path('admin/editar_fornecedores/<int:id>/', views.editar_fornecedores, name='editar_fornecedores'),#needs html
-    #path('admin/apagar_fornecedores/<int:id>/', views.apagar_fornecedores, name='apagar_fornecedores'),
+    path('admin/inserir_forn/', views.inserir_forn, name='inserir_forn'),
+    path('admin/editar_fornecedor/<int:id>/', views.editar_fornecedores, name='editar_fornecedor'),
+    path('admin/apagar_fornecedor/<int:id>/', views.apagar_fornecedores, name='apagar_fornecedor'),
+    path('admin/inserir_componente/', views.insert_componente, name='inserir_componente'),
+    path('admin/listar_componentes/', views.get_componentes, name='listar_componentes'),
+    path('admin/editar_componente/<int:id>/', views.update_componente, name='editar_componente'),
+    path('admin/apagar_componente/<int:id>/', views.apagar_componente, name='apagar_componente'),
+
 ]

@@ -9,7 +9,7 @@ class Utilizador(models.Model):
     id_utilizador = models.AutoField(primary_key=True)
     #TODO:Verificar os models por causa das FKs de Fatura e Encomendas
     #fatura_utilizador = models.ForeignKey('FaturaCliente', on_delete=models.SET_NULL, null=True)
-    #encomenda_utilizador = models.ForeignKey('EncomendaCliente', on_delete=models.SET_NULL, null=True)
+    #encomenda_utilizador = models.ForeignKey('EncomendaCliente', on_delete=models.SET_NULL, null=True)#Veryggod
     tipo_utilizador = models.ForeignKey('TipoUtilizador', on_delete=models.SET_NULL, null=True)
     morada_utilizador = models.CharField(max_length=256, null=True)
     nome = models.CharField(max_length=256, null=True)
@@ -18,7 +18,7 @@ class Utilizador(models.Model):
     NIF = models.DecimalField(max_digits=15, decimal_places=0, null=True)
     estado = models.BooleanField(null=True)
     data_desativado = models.DateTimeField(null=True)
-    password = models.CharField(max_length=256, null=True)   
+    password = models.CharField(max_length=256, null=True)  
 
 class Componente(models.Model):
     id_componente = models.AutoField(primary_key=True)
@@ -160,20 +160,20 @@ class Producao2(models.Model):
         unique_together = ('equipamento', 'componente')
 
 class StockComponente(models.Model):
-    id_stock = models.CharField(primary_key=True, max_length=10)
+    id_stock = models.AutoField(primary_key=True, max_length=10)
     quantidade = models.IntegerField(null=True)
     preco_stock = models.CharField(max_length=10, null=True)
 
 class TipoDeEquipamento(models.Model):
-    id_tipo_de_equipamento = models.IntegerField(primary_key=True)
+    id_tipo_de_equipamento = models.AutoField(primary_key=True)
     designacao_tipo_de_equipamento = models.CharField(max_length=256, null=True)
 
 class TipoComponente(models.Model):
-    id_tipo_componente = models.IntegerField(primary_key=True)
+    id_tipo_componente = models.AutoField(primary_key=True)
     designacao_tipo_componente = models.CharField(max_length=256, null=True)
 
 class TipoDeMaoDeObra(models.Model):
-    id_tipo_mao_de_obra = models.IntegerField(primary_key=True)
+    id_tipo_mao_de_obra = models.AutoField(primary_key=True)
     funcionario = models.ForeignKey('Funcionarios', on_delete=models.SET_NULL, null=True)
     descricao_tipo_mao_de_obra = models.CharField(max_length=256, null=True)
 

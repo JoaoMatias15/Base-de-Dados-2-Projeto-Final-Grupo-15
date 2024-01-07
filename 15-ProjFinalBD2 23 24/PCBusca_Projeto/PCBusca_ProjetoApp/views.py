@@ -9,11 +9,11 @@ from django.contrib.auth.hashers import make_password,check_password
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.forms import ModelForm
-from forms import *
+
 from django import forms
 
 from .filters import EquipamentoFilter
-from .forms import CreateUserForm,AuthForm,UtilizadorForm,UtilizadorForm2
+from .forms import CreateUserForm,AuthForm,UtilizadorForm,UtilizadorForm2,FornecedorForm,ComponenteForm
 from .models import Utilizador
 from .models import Equipamento
 
@@ -280,7 +280,7 @@ def apagar_utilizador(request, id):
 
 #     # Return an HTTP response or render a template
 #     print(result)
-#     return render(request, 'auth/register.html')#Veryggod
+#     return render(request, 'auth/register.html')
 
 
 def trocarEstado(request, id):
@@ -305,10 +305,13 @@ def listar_fornecedores(request):
 
 def editar_fornecedores(request, id):
     with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_forn_by_id', [
+        cursor.callproc('get_fornecedor_by_id', [
             id
         ])
         forn = cursor.fetchone()
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    print(forn)
+    print('--------------------------------------------------------------------------------------------------------------------------')
     #TODO: Meter isto a editar, nao esta a enviar os dados para a base de dados
     print(forn)
     form = FornecedorForm(request.POST, initial={
@@ -324,13 +327,192 @@ def editar_fornecedores(request, id):
         print('--------------------------------------------------------------------------------------------------------------------------')
         if form.is_valid():
             with connections['postgres'].cursor() as cursor:
-                cursor.execute("CALL update_forn(%s, %s, %s, %s, %s, %s)",
-                               [id, form.cleaned_data['nome_fornecedor'],
+                print("Executing SQL:", cursor.mogrify("CALL update_fornecedor(%s, %s, %s, %s, %s, %s)",
+                                       [id, form.cleaned_data['nome_fornecedor'],
+                                        form.cleaned_data['morada_fornecedor'],
+                                        form.cleaned_data['nif'],
+                                        form.cleaned_data['email_fornecedor'],
+                                        form.cleaned_data['telemovel_fornecedor']
+                                       ]))
+                cursor.execute("CALL public.update_fornecedor(%s::integer, %s::text, %s::text, %s::integer, %s::text, %s::integer)",
+               [id,
+                form.cleaned_data['nome_fornecedor'],
+                form.cleaned_data['morada_fornecedor'],
+                form.cleaned_data['nif'],
+                form.cleaned_data['email_fornecedor'],
+                form.cleaned_data['telemovel_fornecedor']
+               ])
+            return redirect('listar_fornecedores')    
+    return render(request, 'admin/editar_fornecedor.html', {'forn': forn})
+
+def apagar_fornecedores(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+                    cursor.execute("CALL delete_fornecedor_by_id(%s)",
+                                [id
+                                    ])
+    return redirect('listar_fornecedores')
+
+def inserir_forn(request):
+    form = FornecedorForm(request.POST or None)
+    print(form.errors)
+    if request.method == 'POST':
+        if form.is_valid():
+            with connections['postgres'].cursor() as cursor:
+                cursor.execute("CALL insert_fornecedor(%s, %s, %s, %s, %s)",
+                            [form.cleaned_data['nome_fornecedor'],
                                 form.cleaned_data['morada_fornecedor'],
-                                form.cleaned_data['email_fornecedor'],
                                 form.cleaned_data['nif'],
+                                form.cleaned_data['email_fornecedor'],
                                 form.cleaned_data['telemovel_fornecedor']
-                                ])
-            return redirect('listar_utilizadores')    
-    return render(request, 'admin/editar_utilizador.html', {'forn': forn})
+                            ])
+        return redirect('listar_fornecedores')
+    return render(request, 'admin/inserir_forn.html', {'form': form})
+
+
+#Componentes
+
+def get_componentes(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_componentes_data')
+        componentes = cursor.fetchall()
+    
+
+    return render(request, 'admin/listar_componentes.html', {'componentes': componentes})
+
+
+def insert_componente(request):
+    #form = ComponenteForm(request.POST or None)
+    #print(form.errors)
+    if request.method == 'POST':
+        context = {}
+        # Get form data
+        print("forn_id: ",request.POST['fornecedor_id'])
+        nome_componente = request.POST['nome_componente']
+        stock = request.POST['stock']
+        preco_compra = request.POST['preco_compra']
+        peso = request.POST['peso']
+        caracteristicas = request.POST['caracteristicas']
+        margem_lucro = request.POST['margem_lucro']
+        stock_min = request.POST['stock_min']
+        fornecedor_id = request.POST['fornecedor_id']
+        tipo_componente_id = request.POST['tipo_componente_id']
+
+        # Call procedure to insert into components
+        with connections['postgres'].cursor() as cursor:
+            print("Executing SQL:", cursor.mogrify("CALL insert_into_componentes(%s::varchar, %s::integer, %s::float8, %s::float8, %s::varchar, %s::float8, %s::integer, %s::integer, %s::integer)",
+                [
+                    nome_componente, stock, preco_compra, peso,
+                    caracteristicas, margem_lucro, stock_min,
+                    fornecedor_id, tipo_componente_id
+                ]
+            ))
+            cursor.execute(
+                "CALL insert_into_componentes(%s::varchar, %s::integer, %s::float8, %s::float8, %s::varchar, %s::float8, %s::integer, %s::integer, %s::integer)",
+                [
+                    nome_componente, stock, preco_compra, peso,
+                    caracteristicas, margem_lucro, stock_min,
+                    fornecedor_id, tipo_componente_id
+                ]
+            )
+
+        return redirect('listar_componentes')
+    with connections['postgres'].cursor() as cursor:       
+        cursor.callproc('get_fornecedores_data')
+        fornecedores = cursor.fetchall()
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print(fornecedores)
+        print('--------------------------------------------------------------------------------------------------------------------------')
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_componentes_data')
+        tipo_componentes = cursor.fetchall()
+
+    return render(request, 'admin/insert_componente.html',{'fornecedores': fornecedores, 'tipo_componentes': tipo_componentes})
+
+
+def update_componente(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_componente_by_id', [id])
+        componente = cursor.fetchone()
+    with connections['postgres'].cursor() as cursor:       
+        cursor.callproc('get_fornecedores_data')
+        fornecedores = cursor.fetchall()
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print(fornecedores)
+        print('--------------------------------------------------------------------------------------------------------------------------')
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_componentes_data')
+        tipo_componentes = cursor.fetchall()
+    if request.method == 'POST':
+        # Get form data
+        nome_componente = request.POST['nome_componente']
+        stock = request.POST['stock']
+        preco_compra = request.POST['preco_compra']
+        peso = request.POST['peso']
+        caracteristicas = request.POST['caracteristicas']
+        margem_lucro = request.POST['margem_lucro']
+        stock_min = request.POST['stock_min']
+        fornecedor_id = request.POST['fornecedor_id']
+        tipo_componente_id = request.POST['tipo_componente_id']
+
+        # Call procedure to update component
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+            CALL update_componente(
+                %s::integer, %s::varchar, %s::integer, %s::float8, %s::float8,
+                %s::varchar, %s::float8, %s::integer, %s::integer, %s::integer
+            )"""
+                ,[ id, nome_componente, stock, preco_compra, peso,
+                caracteristicas, margem_lucro, stock_min,
+                fornecedor_id, tipo_componente_id])
+        return redirect('listar_componentes')
+    return render(request, 'admin/editar_componente.html', {'componente': componente,'fornecedores': fornecedores, 'tipo_componentes': tipo_componentes})
+
+def apagar_componente(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("CALL delete_componente(%s)",
+                           [id])
+    return redirect('listar_componentes')
+
+
+#--------------------------------------------------
+#TipoComponente
+
+def get_tipo_componentes(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_componentes_data')
+        tipo_componentes = cursor.fetchall()
+
+    return render(request, 'your_template_name.html', {'tipo_componentes': tipo_componentes})
+
+
+def update_tipo_componente(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipocomponente_by_id', [id])
+        tipo_componente = cursor.fetchone()
+
+    if request.method == 'POST':
+        designacao_tipo_componente = request.POST['designacao_tipo_componente']
+
+        with connections['postgres'].cursor() as cursor:
+            cursor.callproc('update_tipo_componente', [id, designacao_tipo_componente])
+
+        return redirect('your_redirect_url')
+
+    return render(request, 'your_template_name.html', {'tipo_componente': tipo_componente})
+
+def insert_into_tipo_componentes(request):
+    if request.method == 'POST':
+        designacao_tipo_componente = request.POST['designacao_tipo_componente']
+        
+        with connections['postgres'].cursor() as cursor:
+            cursor.callproc('insert_into_tipo_componentes', [designacao_tipo_componente])
+
+        return redirect('your_redirect_url')
+
+    return render(request, 'your_template_name.html')
+
+
+
 

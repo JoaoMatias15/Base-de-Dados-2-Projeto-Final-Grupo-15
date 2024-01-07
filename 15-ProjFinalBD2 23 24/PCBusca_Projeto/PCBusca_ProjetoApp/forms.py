@@ -65,7 +65,7 @@ class UtilizadorForm2(ModelForm):
 class ComponenteForm(forms.ModelForm):
     class Meta:
         model = Componente
-        exclude = ['id_componente', 'id_fornecedor', 'id_tipo_componente']
+        exclude = ['id_componente']
 
 
 class EncomendaClienteForm(forms.ModelForm):
