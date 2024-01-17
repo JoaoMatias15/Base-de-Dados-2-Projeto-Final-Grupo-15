@@ -1,0 +1,62 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID Equipamento</th>
+      <th>Preço Equipamento</th>
+      <th>Preço de Produção</th>
+      <th>Stock Equipamento</th>
+      <th>Características Equipamento</th>
+      <th>Margem de Lucro Equipamento</th>
+      <th>Stock Mínimo Equipamento</th>
+      <th>Componente</th>
+      <th>Produção</th>
+      <th>Tipo de Equipamento</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for equipamento in equipamentos %}
+      <tr>
+        <td>{{ equipamento.id_equipamento }}</td>
+        <td>{{ equipamento.preco_equipamento }}</td>
+        <td>{{ equipamento.preco_de_producao }}</td>
+        <td>{{ equipamento.stock_equip }}</td>
+        <td>{{ equipamento.caracteristicas_equip }}</td>
+        <td>{{ equipamento.margem_lucro_equip }}</td>
+        <td>{{ equipamento.stock_min_equip }}</td>
+        <td>{{ equipamento.componente_id.nome_componente }}</td>  {# Assuming componente_id is a ForeignKey #}
+        <td>{{ equipamento.producao_id.nome_producao }}</td>  {# Assuming producao_id is a ForeignKey #}
+        <td>{{ equipamento.tipo_equipamento_id.designacao_tipo_de_equipamento }}</td>  {# Assuming tipo_equipamento_id is a ForeignKey #}
+        <td>
+          {% if equipamento.id_equipamento %}
+            <a href="{% url 'editar_equipamento' equipamento.0 %}" class="btn btn-primary">Editar</a>
+            <form id="removerEquipamentoForm{{ equipamento.0 }}" method="post" action="{% url 'apagar_equipamento' equipamento.0 %}">
+              {% csrf_token %}
+              <button type="button" class="btn btn-danger" onclick="confirmRemovalEquipamento('{{ equipamento.0 }}')">
+                Apagar
+              </button>
+            </form>
+          {% else %}
+            <p>ID indisponível</p>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<!--test-->
+<script>
+  function confirmRemovalEquipamento(id) {
+    var confirmation = confirm("Tem certeza que deseja remover?");
+    if (confirmation) {
+      document.getElementById('removerEquipamentoForm' + id).submit();
+    }
+  }
+</script>
+
+{% endblock %}

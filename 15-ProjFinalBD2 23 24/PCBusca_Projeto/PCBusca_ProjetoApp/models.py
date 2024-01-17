@@ -53,9 +53,10 @@ class EncomendaComponente(models.Model):
 
 class Equipamento(models.Model):
     id_equipamento = models.AutoField(primary_key=True)
+    nome_equipamento = models.CharField(max_length=256, null=True)
     tipo_equipamento = models.ForeignKey('TipoDeEquipamento', on_delete=models.SET_NULL, null=True)
     componente = models.ForeignKey('Componente', on_delete=models.SET_NULL, null=True)
-    producao = models.ForeignKey('Producao', on_delete=models.SET_NULL, null=True, related_name='equipamentos')
+    #producao = models.ForeignKey('Producao', on_delete=models.SET_NULL, null=True, related_name='equipamentos')
     # producao = models.ForeignKey('Producao', on_delete=models.SET_NULL, null=True)
     preco_equipamento = models.FloatField()
     preco_de_producao = models.FloatField()
@@ -152,7 +153,7 @@ class Producao(models.Model):
 #     equipamento = models.OneToOneField('Equipamento', on_delete=models.CASCADE, primary_key=True)
 #     componente = models.OneToOneField('Componente', on_delete=models.CASCADE, primary_key=True)
 
-class Producao2(models.Model):
+class Producao2(models.Model):#Já não me lembro para que serve este model
     equipamento = models.ForeignKey('Equipamento', on_delete=models.CASCADE)
     componente = models.ForeignKey('Componente', on_delete=models.CASCADE)
 

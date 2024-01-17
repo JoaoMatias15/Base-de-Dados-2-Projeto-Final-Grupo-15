@@ -24,9 +24,9 @@
         <td>
           {% if fornecedor.0 %}
             <a href="{% url 'editar_fornecedor' fornecedor.0 %}" class="btn btn-primary">Editar</a>
-            <form id="removerForm{{ fornecedor.id_fornecedor }}" method="post" action="{% url 'apagar_fornecedor' fornecedor.0 %}">
+            <form id="removerForm{{ fornecedor.0 }}" method="post" action="{% url 'apagar_fornecedor' fornecedor.0 %}">
               {% csrf_token %}
-              <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ fornecedor.id_fornecedor }}')">
+              <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ fornecedor.0 }}')">
                 Apagar
               </button>
             </form>

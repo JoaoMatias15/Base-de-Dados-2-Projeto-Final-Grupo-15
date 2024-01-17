@@ -31,9 +31,9 @@
         <td>
           {% if componente.0 %}
             <a href="{% url 'editar_componente' componente.0 %}" class="btn btn-primary">Editar</a>
-            <form id="removerForm{{ componente.id_componente }}" method="post" action="{% url 'apagar_componente' componente.0 %}">
+            <form id="removerForm{{ componente.0 }}" method="post" action="{% url 'apagar_componente' componente.0 %}">
               {% csrf_token %}
-              <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ componente.id_componente }}')">
+              <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ componente.0 }}')">
                 Apagar
               </button>
             </form>
@@ -52,7 +52,7 @@
     if (confirmation) {
       document.getElementById('removerForm' + id).submit();
     }
-  }
+}
 </script>
 
 {% endblock %}

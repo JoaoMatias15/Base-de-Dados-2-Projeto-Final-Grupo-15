@@ -26,5 +26,9 @@ urlpatterns =[
     path('admin/listar_componentes/', views.get_componentes, name='listar_componentes'),
     path('admin/editar_componente/<int:id>/', views.update_componente, name='editar_componente'),
     path('admin/apagar_componente/<int:id>/', views.apagar_componente, name='apagar_componente'),
-
+    path('admin/inserir_equipamento/', views.insert_equipamento, name='inserir_equipamento'),
+    path('admin/listar_equipamentos/', views.get_equipamentos, name='listar_equipamentos'),
+    path('admin/editar_equipamento/<int:id>/', views.update_equipamento, name='editar_equipamento'),
+    path('admin/apagar_equipamento/<int:id>/', views.apagar_equipamento, name='apagar_equipamento'),
+    
 ]

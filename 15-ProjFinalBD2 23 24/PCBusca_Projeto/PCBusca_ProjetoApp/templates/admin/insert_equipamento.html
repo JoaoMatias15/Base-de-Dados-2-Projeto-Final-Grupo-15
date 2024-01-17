@@ -1,0 +1,48 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Insert Equipamento</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nome_equipamento">Nome Equipamento</label>
+            <input type="text" class="form-control" id="nome_equipamento" name="nome_equipamento" required>
+        </div>
+        <div class="form-group">
+            <label for="preco_equipamento">Preço Equipamento</label>
+            <input type="number" class="form-control" id="preco_equipamento" name="preco_equipamento" required>
+        </div>
+        <div class="form-group">
+            <label for="preco_de_producao">Preço de Produção</label>
+            <input type="number" class="form-control" id="preco_de_producao" name="preco_de_producao" required>
+        </div>
+        <div class="form-group">
+            <label for="stock_equip">Stock Equipamento</label>
+            <input type="number" class="form-control" id="stock_equip" name="stock_equip" required>
+        </div>
+        <div class="form-group">
+            <label for="caracteristicas_equip">Características Equipamento</label>
+            <input type="text" class="form-control" id="caracteristicas_equip" name="caracteristicas_equip" required>
+        </div>
+        <div class="form-group">
+            <label for="margem_lucro_equip">Margem Lucro Equipamento</label>
+            <input type="number" class="form-control" id="margem_lucro_equip" name="margem_lucro_equip" required>
+        </div>
+        <div class="form-group">
+            <label for="stock_min_equip">Stock Mínimo Equipamento</label>
+            <input type="number" class="form-control" id="stock_min_equip" name="stock_min_equip" required>
+        </div>
+        <div class="form-group">
+            <label for="componente_id">Componente ID</label>
+            <input type="number" class="form-control" id="componente_id" name="componente_id" required>
+        </div>
+        <div class="form-group">
+            <label for="tipo_equipamento_id">Tipo Equipamento ID</label>
+            <input type="number" class="form-control" id="tipo_equipamento_id" name="tipo_equipamento_id" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Insert Equipamento</button>
+    </form>
+</div>
+{% endblock %}
