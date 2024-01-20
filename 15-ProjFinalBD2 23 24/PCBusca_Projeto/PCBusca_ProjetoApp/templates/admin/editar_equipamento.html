@@ -6,40 +6,37 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
+            <label for="nome_equipamento">Nome Equipamento</label>
+            <input type="text" class="form-control" id="nome_equipamento" name="nome_equipamento" value="{{ equipamento.8 }}">
+        </div>
+        <div class="form-group"><!--( 100.0, 10.0, 100, 'Test123', 90, 1, 1, 'Nome')-->
             <label for="preco_equipamento">Preço Equipamento</label>
-            <input type="number" class="form-control" id="preco_equipamento" name="preco_equipamento" value="{{ componente.1 }}">
+            <input type="number" class="form-control" id="preco_equipamento" name="preco_equipamento" value="{{ equipamento.1 }}">
         </div>
         <div class="form-group">
             <label for="preco_de_producao">Preço de Produção</label>
-            <input type="number" class="form-control" id="preco_de_producao" name="preco_de_producao" value="{{ componente.2 }}">
+            <input type="number" class="form-control" id="preco_de_producao" name="preco_de_producao" value="{{ equipamento.2 }}">
         </div>
         <div class="form-group">
             <label for="stock_equip">Stock Equipamento</label>
-            <input type="number" class="form-control" id="stock_equip" name="stock_equip" value="{{ componente.3 }}">
+            <input type="number" class="form-control" id="stock_equip" name="stock_equip" value="{{ equipamento.3 }}">
         </div>
         <div class="form-group">
             <label for="caracteristicas_equip">Características Equipamento</label>
-            <input type="text" class="form-control" id="caracteristicas_equip" name="caracteristicas_equip" value="{{ componente.4 }}">
+            <input type="text" class="form-control" id="caracteristicas_equip" name="caracteristicas_equip" value="{{ equipamento.4 }}">
         </div>
         <div class="form-group">
             <label for="margem_lucro_equip">Margem Lucro Equipamento</label>
-            <input type="number" class="form-control" id="margem_lucro_equip" name="margem_lucro_equip" value="{{ componente.5 }}">
+            <input type="number" class="form-control" id="margem_lucro_equip" name="margem_lucro_equip" value="{{ equipamento.5 }}">
         </div>
         <div class="form-group">
             <label for="stock_min_equip">Stock Mínimo Equipamento</label>
-            <input type="text" class="form-control" id="stock_min_equip" name="stock_min_equip" value="{{ componente.6 }}">
+            <input type="text" class="form-control" id="stock_min_equip" name="stock_min_equip" value="{{ equipamento.6 }}">
         </div>
-        <div class="form-group">
-            <label for="componente_id">Componente ID</label>
-            <input type="number" class="form-control" id="componente_id" name="componente_id" value="{{ componente.7 }}">
-        </div>
-        <div class="form-group">
-            <label for="producao_id">Produção ID</label>
-            <input type="number" class="form-control" id="producao_id" name="producao_id" value="{{ componente.8 }}">
-        </div>
+        
         <div class="form-group">
             <label for="tipo_equipamento_id">Tipo Equipamento ID</label>
-            <input type="number" class="form-control" id="tipo_equipamento_id" name="tipo_equipamento_id" value="{{ componente.9 }}">
+            <input type="number" class="form-control" id="tipo_equipamento_id" name="tipo_equipamento_id" value="{{ equipamento.7 }}">
         </div>
         <button type="submit" class="btn btn-primary">Salvar Equipamento</button>
     </form>

@@ -30,5 +30,8 @@ urlpatterns =[
     path('admin/listar_equipamentos/', views.get_equipamentos, name='listar_equipamentos'),
     path('admin/editar_equipamento/<int:id>/', views.update_equipamento, name='editar_equipamento'),
     path('admin/apagar_equipamento/<int:id>/', views.apagar_equipamento, name='apagar_equipamento'),
-    
+    path('admin/inserir_producao', views.insert_producao, name='inserir_producao'),
+    path('admin/editar_producao/<int:id>/', views.update_producao, name='editar_producao'),
+    path('admin/apagar_producao/<int:id>/', views.apagar_producao, name='apagar_producao'),
+    path('admin/listar_producoes/', views.get_producoes, name='listar_producoes'),
 ]

@@ -1,0 +1,51 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID Produção</th>
+        <th>Horas Produção</th>
+        <th>Custos</th>
+        <th>Equipamento ID</th>
+        <th>Tipo Mão de Obra ID</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for producao in producoes %}
+        <tr>
+          <td>{{ producao.0 }}</td>
+          <td>{{ producao.1 }}</td>
+          <td>{{ producao.2 }}</td>
+          <td>{{ producao.3 }}</td>
+          <td>{{ producao.4 }}</td>
+          <td>
+            {% if producao.0 %}
+              <a href="{% url 'editar_producao' producao.0 %}" class="btn btn-primary">Editar</a>
+              <form id="removerProducaoForm{{ producao.0 }}" method="post" action="{% url 'apagar_producao' producao.0 %}">
+                {% csrf_token %}
+                <button type="button" class="btn btn-danger" onclick="confirmRemovalProducao('{{ producao.0 }}')">
+                  Apagar
+                </button>
+              </form>
+            {% else %}
+              <p>ID indisponível</p>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- JavaScript for confirmation -->
+  <script>
+    function confirmRemovalProducao(id) {
+      var confirmation = confirm("Tem certeza que deseja remover?");
+      if (confirmation) {
+        document.getElementById('removerProducaoForm' + id).submit();
+      }
+    }
+  </script>
+{% endblock %}

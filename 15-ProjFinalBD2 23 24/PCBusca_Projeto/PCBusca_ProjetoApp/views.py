@@ -522,6 +522,9 @@ def get_equipamentos(request):
     with connections['postgres'].cursor() as cursor:
         cursor.callproc('get_equipamentos_data')
         equipamentos = cursor.fetchall()
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print(equipamentos)
+        print('--------------------------------------------------------------------------------------------------------------------------')
 
     return render(request, 'admin/listar_equipamentos.html', {'equipamentos': equipamentos})
 
@@ -535,7 +538,6 @@ def insert_equipamento(request):
         caracteristicas_equip = request.POST['caracteristicas_equip']
         margem_lucro_equip = float(request.POST['margem_lucro_equip'])
         stock_min_equip = int(request.POST['stock_min_equip'])
-        componente_id = int(request.POST['componente_id'])
         tipo_equipamento_id = int(request.POST['tipo_equipamento_id'])
 
         # Call procedure to insert into equipamentos
@@ -548,24 +550,20 @@ def insert_equipamento(request):
 #     [nome_equipamento, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip, margem_lucro_equip, stock_min_equip, componente_id, tipo_equipamento_id]
 # )      
             cursor.execute(
-    "CALL insert_into_equipamentos(%s::varchar, %s::float8, %s::float8, %s::integer, %s::varchar, %s::integer, %s::integer, %s::integer, %s::integer)",
-    [nome_equipamento, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip, int(margem_lucro_equip), stock_min_equip, componente_id, tipo_equipamento_id]
+    "CALL insert_into_equipamentos(%s::varchar, %s::float8, %s::float8, %s::integer, %s::varchar, %s::integer, %s::integer, %s::integer)",
+    [nome_equipamento, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip, int(margem_lucro_equip), stock_min_equip, tipo_equipamento_id]
 )
 
 
         return redirect('listar_equipamentos')
 
     # Fetch data needed for dropdowns (componentes, producoes, tipo de equipamentos)
-    with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_componentes_data')
-        componentes = cursor.fetchall()
 
     with connections['postgres'].cursor() as cursor:
         cursor.callproc('get_tipo_equipamentos_data')
         tipo_equipamentos = cursor.fetchall()
 
     return render(request, 'admin/insert_equipamento.html', {
-        'componentes': componentes,
         'tipo_equipamentos': tipo_equipamentos
     })
 
@@ -584,7 +582,6 @@ def update_equipamento(request, id):
         caracteristicas_equip = request.POST['caracteristicas_equip']
         margem_lucro_equip = request.POST['margem_lucro_equip']
         stock_min_equip = request.POST['stock_min_equip']
-        componente_id = request.POST['componente_id']
         
         tipo_equipamento_id = request.POST['tipo_equipamento_id']
 
@@ -592,23 +589,20 @@ def update_equipamento(request, id):
         with connections['postgres'].cursor() as cursor:
             cursor.execute("""
             CALL update_equipamento(
-                %s::varchar, %s::integer, %s::float8, %s::float8, %s::integer, %s::varchar,
-                %s::float8, %s::integer, %s::integer,  %s::integer
+                 %s::integer,%s::float8, %s::float8, %s::integer, %s::varchar,
+                %s::integer, %s::integer, %s::integer, %s::varchar
             )""",
                 [id, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip,
-                 margem_lucro_equip, stock_min_equip, componente_id,  tipo_equipamento_id]
+                 margem_lucro_equip, stock_min_equip, tipo_equipamento_id,nome_equipamento]
             )
 
         return redirect('listar_equipamentos')
 
     # Fetch data needed for dropdowns (componentes, producoes, tipo de equipamentos)
-    with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_componentes_data')
-        componentes = cursor.fetchall()
 
-    with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_producoes_data')
-        producoes = cursor.fetchall()
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    print(equipamento)
+    print('--------------------------------------------------------------------------------------------------------------------------')
 
     with connections['postgres'].cursor() as cursor:
         cursor.callproc('get_tipo_equipamentos_data')
@@ -616,8 +610,6 @@ def update_equipamento(request, id):
 
     return render(request, 'admin/editar_equipamento.html', {
         'equipamento': equipamento,
-        'componentes': componentes,
-        'producoes': producoes,
         'tipo_equipamentos': tipo_equipamentos
     })
 
@@ -630,3 +622,92 @@ def apagar_equipamento(request, id):
 
 
 
+def get_producoes(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_producao_data')
+        producoes = cursor.fetchall()
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print(producoes)
+        print('--------------------------------------------------------------------------------------------------------------------------')
+
+    return render(request, 'admin/listar_producoes.html', {'producoes': producoes})
+
+def insert_producao(request):
+    if request.method == 'POST':
+        # Get form data
+        horas_producao = float(request.POST['horas_producao'])
+        custos = float(request.POST['custos'])
+        equipamento_id = int(request.POST['equipamento_id'])
+        tipo_mao_de_obra_id = int(request.POST['tipo_mao_de_obra_id'])
+
+        # Call procedure to insert into producao
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute(
+                "CALL insert_into_producao(%s::float8, %s::float8, %s::integer, %s::integer)",
+                [horas_producao, custos, equipamento_id, tipo_mao_de_obra_id]
+            )
+
+        return redirect('listar_producoes')
+
+    # Fetch data needed for dropdowns (equipamentos, tipo de mao de obra)
+
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_equipamentos_data')
+        equipamentos = cursor.fetchall()
+
+        cursor.callproc('get_tipos_mao_de_obra_data')
+        tipos_mao_de_obra = cursor.fetchall()
+
+    return render(request, 'admin/insert_producao.html', {
+        'equipamentos': equipamentos,
+        'tipos_mao_de_obra': tipos_mao_de_obra
+    })
+
+def update_producao(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_producao_by_id', [id])
+        producao = cursor.fetchone()
+
+    if request.method == 'POST':
+        # Get form data
+        horas_producao = float(request.POST['horas_producao'])
+        custos = float(request.POST['custos'])
+        equipamento_id = int(request.POST['equipamento_id'])
+        tipo_mao_de_obra_id = int(request.POST['tipo_mao_de_obra_id'])
+
+        # Call procedure to update producao
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+            CALL update_producao(
+                 %s::integer,%s::float8, %s::float8, %s::integer, %s::integer
+            )""",
+                [id, horas_producao, custos, equipamento_id, tipo_mao_de_obra_id]
+            )
+
+        return redirect('listar_producoes')
+
+    # Fetch data needed for dropdowns (equipamentos, tipo de mao de obra)
+
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    print(producao)
+    print('--------------------------------------------------------------------------------------------------------------------------')
+
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_equipamentos_data')
+        equipamentos = cursor.fetchall()
+
+        cursor.callproc('get_tipos_mao_de_obra_data')
+        tipos_mao_de_obra = cursor.fetchall()
+
+    return render(request, 'admin/editar_producao.html', {
+        'producao': producao,
+        'equipamentos': equipamentos,
+        'tipos_mao_de_obra': tipos_mao_de_obra
+    })
+
+def apagar_producao(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("CALL delete_producao(%s)", [id])
+
+    return redirect('listar_producoes')

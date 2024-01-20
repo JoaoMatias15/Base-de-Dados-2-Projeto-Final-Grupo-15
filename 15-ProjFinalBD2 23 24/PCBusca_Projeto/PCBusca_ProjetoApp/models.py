@@ -55,7 +55,7 @@ class Equipamento(models.Model):
     id_equipamento = models.AutoField(primary_key=True)
     nome_equipamento = models.CharField(max_length=256, null=True)
     tipo_equipamento = models.ForeignKey('TipoDeEquipamento', on_delete=models.SET_NULL, null=True)
-    componente = models.ForeignKey('Componente', on_delete=models.SET_NULL, null=True)
+    #componente = models.ForeignKey('Componente', on_delete=models.SET_NULL, null=True)
     #producao = models.ForeignKey('Producao', on_delete=models.SET_NULL, null=True, related_name='equipamentos')
     # producao = models.ForeignKey('Producao', on_delete=models.SET_NULL, null=True)
     preco_equipamento = models.FloatField()
@@ -63,7 +63,7 @@ class Equipamento(models.Model):
     stock_equip = models.IntegerField()
     caracteristicas_equip = models.CharField(max_length=256, null=True)
     margem_lucro_equip = models.IntegerField(null=True)
-    stock_min_equip = models.CharField(max_length=10, null=True)
+    stock_min_equip = models.IntegerField()
     
     
 
@@ -93,6 +93,7 @@ class Funcionarios(models.Model):
     morada_funcionario = models.CharField(max_length=256, null=True)
     telemovel_funcionario = models.IntegerField(null=True)
     idade = models.IntegerField(null=True)
+    TipoDeMaoDeObra_id = models.ForeignKey('TipoDeMaoDeObra', on_delete=models.SET_NULL, null=True)
 
 class GuiaDeRemessa(models.Model):
     id_guia_de_remessa = models.AutoField(primary_key=True)
@@ -142,8 +143,6 @@ class NotasDeEncomenda(models.Model):
 
 class Producao(models.Model):
     id_producao = models.AutoField(primary_key=True)
-    componente = models.ForeignKey('Componente', on_delete=models.SET_NULL, null=True)
-    # equipamento = models.ForeignKey('Equipamento', on_delete=models.SET_NULL, null=True)
     equipamento = models.ForeignKey('Equipamento', on_delete=models.SET_NULL, null=True, related_name='producoes')
     tipo_mao_de_obra = models.ForeignKey('TipoDeMaoDeObra', on_delete=models.SET_NULL, null=True)
     horas_producao = models.FloatField(null=True)
@@ -153,10 +152,9 @@ class Producao(models.Model):
 #     equipamento = models.OneToOneField('Equipamento', on_delete=models.CASCADE, primary_key=True)
 #     componente = models.OneToOneField('Componente', on_delete=models.CASCADE, primary_key=True)
 
-class Producao2(models.Model):#Já não me lembro para que serve este model
+class Producao2(models.Model):#Usamos isto para fazer a relacao muitos para muitos entre equipamento e componente
     equipamento = models.ForeignKey('Equipamento', on_delete=models.CASCADE)
     componente = models.ForeignKey('Componente', on_delete=models.CASCADE)
-
     class Meta:
         unique_together = ('equipamento', 'componente')
 
@@ -175,7 +173,7 @@ class TipoComponente(models.Model):
 
 class TipoDeMaoDeObra(models.Model):
     id_tipo_mao_de_obra = models.AutoField(primary_key=True)
-    funcionario = models.ForeignKey('Funcionarios', on_delete=models.SET_NULL, null=True)
+    #funcionario = models.ForeignKey('Funcionarios', on_delete=models.SET_NULL, null=True)
     descricao_tipo_mao_de_obra = models.CharField(max_length=256, null=True)
 
 
