@@ -736,7 +736,7 @@ def insert_tipo_equipamento(request):
         # Call procedure to insert into tipo_equipamento
         with connections['postgres'].cursor() as cursor:
             cursor.execute(
-                "CALL insert_into_tipo_equipamento(%s::varchar)",
+                "CALL insert_into_tipo_equipamentos(%s::varchar)",
                 [designacao_tipo_equipamento]
             )
 
@@ -746,7 +746,7 @@ def insert_tipo_equipamento(request):
 
 def update_tipo_equipamento(request, id):
     with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_tipo_equipamento_by_id', [id])
+        cursor.callproc('get_tipo_equipamentos_by_id', [id])
         tipo_equipamento = cursor.fetchone()
 
     if request.method == 'POST':
