@@ -1,0 +1,16 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Inserir Tipo de Componente</h1>
+    <form method="post" action="{% url 'inserir_tipo_componente' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="designacao_tipo_componente">Designação do Tipo de Componente</label>
+            <input type="text" class="form-control" id="designacao_tipo_componente" name="designacao_tipo_componente" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Inserir Tipo de Componente</button>
+    </form>
+</div>
+{% endblock %}

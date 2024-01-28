@@ -12,8 +12,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField('StockComponente', 'id_stock', models.AutoField(max_length=255)),
-        migrations.AlterField('TipoDeEquipamento', 'id_tipo_de_equipamento', models.AutoField(max_length=255)),
-        migrations.AlterField('TipoComponente', 'id_tipo_componente', models.AutoField(max_length=255)),
-        migrations.AlterField('TipoDeMaoDeObra', 'id_tipo_mao_de_obra', models.AutoField(max_length=255))
+        # migrations.AlterField('StockComponente', 'id_stock', models.AutoField(max_length=255)),
+        # migrations.AlterField('TipoDeEquipamento', 'id_tipo_de_equipamento', models.AutoField(max_length=255)),
+        # migrations.AlterField('TipoComponente', 'id_tipo_componente', models.AutoField(max_length=255)),
+        # migrations.AlterField('TipoDeMaoDeObra', 'id_tipo_mao_de_obra', models.AutoField(max_length=255))
     ]

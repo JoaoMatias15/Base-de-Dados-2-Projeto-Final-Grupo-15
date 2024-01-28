@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Listar Tipo de Equipamentos</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Designação</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tipo_equipamento in tipo_equipamentos %}
+        <tr>
+          <td>{{ tipo_equipamento.0 }}</td>
+          <td>{{ tipo_equipamento.1 }}</td>
+          <td>
+            <a href="{% url 'update_tipo_equipamento' tipo_equipamento.0 %}">Editar</a>
+            <form method="post" action="{% url 'apagar_tipo_equipamento' tipo_equipamento.0 %}">
+              {% csrf_token %}
+              <input type="submit" value="Apagar">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'insert_tipo_equipamento' %}">Inserir Tipo de Equipamento</a>
+{% endblock %}

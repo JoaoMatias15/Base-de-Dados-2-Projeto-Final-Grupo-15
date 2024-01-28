@@ -1,0 +1,16 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Tipo de Componente - {{ tipo_componente.designacao_tipo_componente }}</h1>
+    <form method="post" action="{% url 'editar_tipo_componente' tipo_componente.0 %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="designacao_tipo_componente">Designação do Tipo de Componente</label>
+            <input type="text" class="form-control" id="designacao_tipo_componente" name="designacao_tipo_componente" value="{{ tipo_componente.1 }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Atualizar</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Editar Tipo de Equipamento</h2>
+  <form method="post" action="{% url 'update_tipo_equipamento' tipo_equipamento.0 %}">
+    {% csrf_token %}
+    <label for="designacao_tipo_equipamento">Designação:</label>
+    <input type="text" name="designacao_tipo_equipamento" value="{{ tipo_equipamento.1 }}" required>
+    <input type="submit" value="Atualizar">
+  </form>
+  <a href="{% url 'listar_tipo_equipamento' %}">Voltar para a lista de Tipo de Equipamento</a>
+{% endblock %}

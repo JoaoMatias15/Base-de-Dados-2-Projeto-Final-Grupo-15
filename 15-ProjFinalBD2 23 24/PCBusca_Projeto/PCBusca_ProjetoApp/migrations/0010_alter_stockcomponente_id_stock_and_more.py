@@ -10,24 +10,24 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='stockcomponente',
-            name='id_stock',
-            field=models.AutoField(max_length=10, primary_key=True, serialize=False),
-        ),
-        migrations.AlterField(
-            model_name='tipocomponente',
-            name='id_tipo_componente',
-            field=models.AutoField(primary_key=True, serialize=False),
-        ),
-        migrations.AlterField(
-            model_name='tipodeequipamento',
-            name='id_tipo_de_equipamento',
-            field=models.AutoField(primary_key=True, serialize=False),
-        ),
-        migrations.AlterField(
-            model_name='tipodemaodeobra',
-            name='id_tipo_mao_de_obra',
-            field=models.AutoField(primary_key=True, serialize=False),
-        ),
+        # migrations.AlterField(
+        #     model_name='stockcomponente',
+        #     name='id_stock',
+        #     field=models.AutoField(max_length=10, primary_key=True, serialize=False),
+        # ),
+        # migrations.AlterField(
+        #     model_name='tipocomponente',
+        #     name='id_tipo_componente',
+        #     field=models.AutoField(primary_key=True, serialize=False),
+        # ),
+        # migrations.AlterField(
+        #     model_name='tipodeequipamento',
+        #     name='id_tipo_de_equipamento',
+        #     field=models.AutoField(primary_key=True, serialize=False),
+        # ),
+        # migrations.AlterField(
+        #     model_name='tipodemaodeobra',
+        #     name='id_tipo_mao_de_obra',
+        #     field=models.AutoField(primary_key=True, serialize=False),
+        # ),
     ]

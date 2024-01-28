@@ -485,23 +485,23 @@ def get_tipo_componentes(request):
         cursor.callproc('get_tipo_componentes_data')
         tipo_componentes = cursor.fetchall()
 
-    return render(request, 'your_template_name.html', {'tipo_componentes': tipo_componentes})
+    return render(request, 'admin/listar_tipo_componente.html', {'tipo_componentes': tipo_componentes})
 
 
 def update_tipo_componente(request, id):
     with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_tipocomponente_by_id', [id])
+        cursor.callproc('get_tipo_componente_by_id', [id])
         tipo_componente = cursor.fetchone()
 
     if request.method == 'POST':
         designacao_tipo_componente = request.POST['designacao_tipo_componente']
 
         with connections['postgres'].cursor() as cursor:
-            cursor.callproc('update_tipo_componente', [id, designacao_tipo_componente])
+            cursor.execute("CALL update_tipo_componente(%s::integer,%s::text)", [id, designacao_tipo_componente])
 
-        return redirect('your_redirect_url')
+        return redirect('listar_tipo_componentes')
 
-    return render(request, 'your_template_name.html', {'tipo_componente': tipo_componente})
+    return render(request, 'admin/editar_tipo_componente.html', {'tipo_componente': tipo_componente})
 
 
 
@@ -510,11 +510,19 @@ def insert_into_tipo_componentes(request):
         designacao_tipo_componente = request.POST['designacao_tipo_componente']
         
         with connections['postgres'].cursor() as cursor:
-            cursor.callproc('insert_into_tipo_componentes', [designacao_tipo_componente])
+            # cursor.callproc('insert_into_tipo_componentes', [designacao_tipo_componente])
+            cursor.execute("CALL insert_into_tipo_componentes(%s::text)", [designacao_tipo_componente])
 
-        return redirect('your_redirect_url')
+        return redirect('listar_tipo_componentes')
 
-    return render(request, 'your_template_name.html')
+    return render(request, 'admin/insert_tipo_componente.html')
+
+def apagar_tipo_componente(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("CALL delete_tipo_componente(%s)", [id])
+
+    return redirect('listar_tipo_componentes')
 
 
 #Equipamentos
@@ -620,8 +628,6 @@ def apagar_equipamento(request, id):
 
     return redirect('listar_equipamentos')
 
-
-
 def get_producoes(request):
     with connections['postgres'].cursor() as cursor:
         cursor.callproc('get_producao_data')
@@ -711,3 +717,60 @@ def apagar_producao(request, id):
             cursor.execute("CALL delete_producao(%s)", [id])
 
     return redirect('listar_producoes')
+
+
+# Tipo de Equipamentos
+
+def get_tipo_equipamentos(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_equipamentos_data')
+        tipo_equipamentos = cursor.fetchall()
+
+    return render(request, 'admin/listar_tipo_equipamento.html', {'tipo_equipamentos': tipo_equipamentos})
+
+def insert_tipo_equipamento(request):
+    if request.method == 'POST':
+        # Get form data
+        designacao_tipo_equipamento = request.POST['designacao_tipo_equipamento']
+
+        # Call procedure to insert into tipo_equipamento
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute(
+                "CALL insert_into_tipo_equipamento(%s::varchar)",
+                [designacao_tipo_equipamento]
+            )
+
+        return redirect('listar_tipo_equipamentos')
+
+    return render(request, 'admin/insert_tipo_equipamento.html')
+
+def update_tipo_equipamento(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_equipamento_by_id', [id])
+        tipo_equipamento = cursor.fetchone()
+
+    if request.method == 'POST':
+        # Get form data
+        designacao_tipo_equipamento = request.POST['designacao_tipo_equipamento']
+
+        # Call procedure to update tipo_equipamento
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+            CALL update_tipo_equipamento(
+                 %s::integer,%s::varchar
+            )""",
+                [id, designacao_tipo_equipamento]
+            )
+
+        return redirect('listar_tipo_equipamentos')
+
+    return render(request, 'admin/editar_tipo_equipamento.html', {'tipo_equipamento': tipo_equipamento})
+
+def apagar_tipo_equipamento(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("CALL delete_tipo_equipamento(%s)", [id])
+
+    return redirect('listar_tipo_equipamentos')
+
+
