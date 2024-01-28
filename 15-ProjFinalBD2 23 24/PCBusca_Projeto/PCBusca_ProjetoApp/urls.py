@@ -39,7 +39,7 @@ urlpatterns =[
     path('admin/editar_tipo_componente/<int:id>/', views.update_tipo_componente, name='editar_tipo_componente'),
     path('admin/apagar_tipo_componente/<int:id>/', views.apagar_tipo_componente, name='apagar_tipo_componente'),
     path('admin/listar_tipo_equipamentos/', views.get_tipo_equipamentos, name='listar_tipo_equipamentos'),
-    path('admin/inserir_tipo_equipamento/', views.insert_into_tipo_equipamentos, name='inserir_tipo_equipamento'),
+    path('admin/inserir_tipo_equipamento/', views.insert_tipo_equipamento, name='inserir_tipo_equipamento'),
     path('admin/editar_tipo_equipamento/<int:id>/', views.update_tipo_equipamento, name='editar_tipo_equipamento'),
     path('admin/apagar_tipo_equipamento/<int:id>/', views.apagar_tipo_equipamento, name='apagar_tipo_equipamento'),
 ]
