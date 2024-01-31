@@ -3,7 +3,7 @@
 
 {% block content %}
   <h2>Inserir Produção</h2>
-  <form method="post" action="{% url 'insert_producao' %}">
+  <form method="post" action="{% url 'inserir_producao' %}">
     {% csrf_token %}
 
     <div class="form-group">
@@ -20,7 +20,7 @@
       <label for="equipamento_id">Equipamento:</label>
       <select class="form-control" id="equipamento_id" name="equipamento_id" required>
         {% for equipamento in equipamentos %}
-          <option value="{{ equipamento.0 }}">{{ equipamento.9 }}</option>
+          <option value="{{ equipamento.0 }}">{{ equipamento.8 }}</option>
         {% endfor %}
       </select>
     </div>

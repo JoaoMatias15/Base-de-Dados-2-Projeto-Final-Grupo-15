@@ -42,4 +42,12 @@ urlpatterns =[
     path('admin/inserir_tipo_equipamento/', views.insert_tipo_equipamento, name='inserir_tipo_equipamento'),
     path('admin/editar_tipo_equipamento/<int:id>/', views.update_tipo_equipamento, name='editar_tipo_equipamento'),
     path('admin/apagar_tipo_equipamento/<int:id>/', views.apagar_tipo_equipamento, name='apagar_tipo_equipamento'),
+    path('admin/listar_tipo_mao_de_obra/', views.get_tipo_mao_de_obra, name='listar_tipo_mao_de_obra'),
+    path('admin/inserir_tipo_mao_de_obra/', views.inserir_tipo_mao_de_obra, name='inserir_tipo_mao_de_obra'),
+    path('admin/editar_tipo_mao_de_obra/<int:id>/', views.update_tipo_mao_de_obra, name='editar_tipo_mao_de_obra'),
+    path('admin/apagar_tipo_mao_de_obra/<int:id>/', views.apagar_tipo_mao_de_obra, name='apagar_tipo_mao_de_obra'),
+    path('admin/listar_producoes/', views.get_producoes, name='listar_producao'),
+    path('admin/inserir_producao/', views.insert_producao, name='inserir_producao'),
+    path('admin/editar_producao/<int:id>/', views.update_producao, name='editar_producao'),
+    path('admin/apagar_producao/<int:id>/', views.apagar_producao, name='apagar_producao'),
 ]

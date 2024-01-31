@@ -628,15 +628,17 @@ def apagar_equipamento(request, id):
 
     return redirect('listar_equipamentos')
 
+# Producao
+
 def get_producoes(request):
     with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_producao_data')
+        cursor.callproc('get_producoes_data')
         producoes = cursor.fetchall()
         print('--------------------------------------------------------------------------------------------------------------------------')
         print(producoes)
         print('--------------------------------------------------------------------------------------------------------------------------')
 
-    return render(request, 'admin/listar_producoes.html', {'producoes': producoes})
+    return render(request, 'admin/listar_producao.html', {'producoes': producoes})
 
 def insert_producao(request):
     if request.method == 'POST':
@@ -649,8 +651,8 @@ def insert_producao(request):
         # Call procedure to insert into producao
         with connections['postgres'].cursor() as cursor:
             cursor.execute(
-                "CALL insert_into_producao(%s::float8, %s::float8, %s::integer, %s::integer)",
-                [horas_producao, custos, equipamento_id, tipo_mao_de_obra_id]
+                "CALL insert_into_producao(%s::integer, %s::integer, %s::float8, %s::float8)",
+                [ equipamento_id, tipo_mao_de_obra_id,horas_producao, custos]
             )
 
         return redirect('listar_producoes')
@@ -661,7 +663,7 @@ def insert_producao(request):
         cursor.callproc('get_equipamentos_data')
         equipamentos = cursor.fetchall()
 
-        cursor.callproc('get_tipos_mao_de_obra_data')
+        cursor.callproc('get_tipo_mao_de_obra_data')
         tipos_mao_de_obra = cursor.fetchall()
 
     return render(request, 'admin/insert_producao.html', {
@@ -685,9 +687,9 @@ def update_producao(request, id):
         with connections['postgres'].cursor() as cursor:
             cursor.execute("""
             CALL update_producao(
-                 %s::integer,%s::float8, %s::float8, %s::integer, %s::integer
+                 %s::integer, %s::integer, %s::integer, %s::float8, %s::float8
             )""",
-                [id, horas_producao, custos, equipamento_id, tipo_mao_de_obra_id]
+                [id, equipamento_id, tipo_mao_de_obra_id, horas_producao, custos,]
             )
 
         return redirect('listar_producoes')
@@ -702,7 +704,7 @@ def update_producao(request, id):
         cursor.callproc('get_equipamentos_data')
         equipamentos = cursor.fetchall()
 
-        cursor.callproc('get_tipos_mao_de_obra_data')
+        cursor.callproc('get_tipo_mao_de_obra_data')
         tipos_mao_de_obra = cursor.fetchall()
 
     return render(request, 'admin/editar_producao.html', {
@@ -772,5 +774,57 @@ def apagar_tipo_equipamento(request, id):
             cursor.execute("CALL delete_tipo_equipamento(%s)", [id])
 
     return redirect('listar_tipo_equipamentos')
+
+# Tipo de mao de obra
+
+def get_tipo_mao_de_obra(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_mao_de_obra_data')
+        tipo_mao_de_obra = cursor.fetchall()
+
+    return render(request, 'admin/listar_tipo_mao_de_obra.html', {'tipo_mao_de_obra': tipo_mao_de_obra})
+
+def inserir_tipo_mao_de_obra(request):
+    if request.method == 'POST':
+        descricao_tipo_mao_de_obra = request.POST['descricao_tipo_mao_de_obra']
+
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute(
+                "CALL insert_into_tipo_mao_de_obra(%s::varchar)",
+                [descricao_tipo_mao_de_obra]
+            )
+
+        return redirect('listar_tipo_mao_de_obra')
+
+    return render(request, 'admin/insert_tipo_mao_de_obra.html')
+
+def update_tipo_mao_de_obra(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_mao_de_obra_by_id', [id])
+        tipo_mao_de_obra = cursor.fetchone()
+
+    if request.method == 'POST':
+        # Obter dados do formulário
+        descricao_tipo_mao_de_obra = request.POST['descricao_tipo_mao_de_obra']
+
+        # Chamar procedimento para atualizar tipo_mao_de_obra
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+            CALL update_tipo_mao_de_obra(
+                 %s::integer, %s::varchar
+            )""",
+                [id, descricao_tipo_mao_de_obra]
+            )
+
+        return redirect('listar_tipo_mao_de_obra')
+
+    return render(request, 'admin/editar_tipo_mao_de_obra.html', {'tipo_mao_de_obra': tipo_mao_de_obra})
+
+def apagar_tipo_mao_de_obra(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("CALL delete_tipo_mao_de_obra(%s)", [id])
+
+    return redirect('listar_tipo_mao_de_obra')
 
 
