@@ -26,6 +26,14 @@
             <label for="telemovel">Telemovel</label>
             <input type="number" class="form-control" id="telemovel" name="telemovel" value="{{ user.4 }}">
         </div>
+        <div class="form-group">
+            <label for="tipo_utilizador_id">Tipo Utilizador</label>
+            <select class="form-control" id="tipo_utilizador_id" name="tipo_utilizador_id" required>
+                {% for tipo_utilizador in tipo_utilizadores %}
+                    <option value="{{ tipo_utilizador.0 }}">{{ tipo_utilizador.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
 </div>

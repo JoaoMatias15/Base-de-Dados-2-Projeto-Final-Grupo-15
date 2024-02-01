@@ -9,7 +9,8 @@ from django.contrib.auth.hashers import make_password,check_password
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.forms import ModelForm
-
+from .models import Carrinho, EncomendaCliente
+from django.db import transaction
 from django import forms
 
 from .filters import EquipamentoFilter
@@ -24,6 +25,9 @@ from .models import Equipamento
 # from .models import Fornecedores
 # from .forms import FornecedoresForm
 from django.db import connections
+from django.shortcuts import render,get_object_or_404, redirect
+from .models import Carrinho
+	
 
 def registerPage(request):
     context = {}
@@ -102,13 +106,13 @@ def login_view(request):
     return render(request, 'auth/login.html', context)
 
 def index(request):
-    equipamentos = Equipamento.objects.filter()
-    print('--------------------------------------------------------------------------------------------------------------------------')
-    print(equipamentos)
-    print('--------------------------------------------------------------------------------------------------------------------------')
-    myFilter = EquipamentoFilter(request.GET, queryset=equipamentos)
-    products = myFilter.qs
-    return render(request, 'cliente/mainmenu.html', {'equipamento': equipamentos, 'myFilter': myFilter})
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_equipamentos_data')
+        equipamentos = cursor.fetchall()
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print(equipamentos)
+        print('--------------------------------------------------------------------------------------------------------------------------')
+    return render(request, 'cliente/mainmenu.html', {'equipamento': equipamentos})
 
 # def cart(request):
 #     # Get the cart from the cookies
@@ -196,13 +200,52 @@ def listar_utilizadores(request):
     print('--------------------------------------------------------------------------------------------------------------------------')
     return render(request, 'admin/listar_utilizadores.html', context)
 
+# def criar_utilizador(request):
+#     form = UtilizadorForm(request.POST or None)
+#     print(form.errors)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('listar_utilizadores')
+#     return render(request, 'admin/criar_utilizador.html', {'form': form})
+
 def criar_utilizador(request):
-    form = UtilizadorForm(request.POST or None)
-    print(form.errors)
-    if form.is_valid():
-        form.save()
+    if request.method == 'POST':
+        # Get form data
+        nome = request.POST['nome']
+        morada = request.POST['morada_utilizador']
+        email = request.POST['email']
+        telemovel = request.POST['telefone']
+        nif = request.POST['NIF']
+        tipo_utilizador_id = request.POST['tipo_utilizador_id']
+        password = request.POST['password']
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print('%s,%s,%s,%s,%s,%s' % (nome, morada, email, telemovel, nif, tipo_utilizador_id))
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        # Call procedure to insert into 'utilizadores'
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+            Select * from insert_into_utilizador_admin(
+                %s::varchar, %s::varchar, %s::varchar, %s::numeric,
+                %s::numeric, %s::integer,%s::varchar
+            )""",
+            [morada, nome, email, telemovel, nif, tipo_utilizador_id, make_password(password,'Bd2')])
+
         return redirect('listar_utilizadores')
-    return render(request, 'admin/criar_utilizador.html', {'form': form})
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipos_utilizadores_data')
+        tipo_utilizadores = cursor.fetchall()
+    return render(request, 'admin/criar_utilizador.html', {'tipo_utilizadores': tipo_utilizadores})
+
+# FUNCTION public.insert_into_utilizador_admin(
+# 	p_morada_utilizador character varying,
+# 	p_nome character varying,
+# 	p_email character varying,
+# 	p_telemovel numeric,
+# 	p_nif numeric,
+# 	p_tipo_utilizador_id integer)
+
+    # Fetch 'tipo utilizadores' data for the form
+    
 
 # def editar_utilizador(request, id):
 #     with connections['postgres'].cursor() as cursor:
@@ -238,9 +281,6 @@ def editar_utilizador(request, id):
         print(form.errors)
         print('--------------------------------------------------------------------------------------------------------------------------')
         if form.is_valid():
-            print('--------------------------------------------------------------------------------------------------------------------------')
-            print('ola')
-            print('--------------------------------------------------------------------------------------------------------------------------')
             with connections['postgres'].cursor() as cursor:
                 cursor.execute("CALL update_user(%s, %s, %s, %s, %s, %s)",
                                [id, form.cleaned_data['morada_utilizador'],
@@ -249,11 +289,44 @@ def editar_utilizador(request, id):
                                 form.cleaned_data['telemovel'],
                                 form.cleaned_data['NIF']
                                 ])
-                print('--------------------------------------------------------------------------------------------------------------------------')
-                print('adeus')
-                print('--------------------------------------------------------------------------------------------------------------------------')
+                
             return redirect('listar_utilizadores')    
     return render(request, 'admin/editar_utilizador.html', {'user': user})
+
+
+def update_utilizador(request, id):
+    # Get 'utilizador' data by ID
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_utilizador_by_id', [id])
+        utilizador = cursor.fetchone()
+
+    # Get 'tipo utilizadores' data
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipos_utilizadores_data')
+        tipos_utilizadores = cursor.fetchall()
+
+    if request.method == 'POST':
+        # Get form data
+        nome = request.POST['nome']
+        morada = request.POST['morada']
+        email = request.POST['email']
+        telemovel = request.POST['telemovel']
+        nif = request.POST['nif']
+        estado = request.POST['estado']
+        tipo_utilizador_id = request.POST['tipo_utilizador_id']
+
+        # Call procedure to update 'utilizador'
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+            CALL update_utilizador(
+                %s::integer, %s::varchar, %s::varchar, %s::varchar,
+                %s::integer, %s::boolean, %s::integer
+            )"""
+            ,[id, nome, morada, email, telemovel, nif, estado, tipo_utilizador_id])
+
+        return redirect('listar_utilizadores')
+
+    return render(request, 'admin/editar_utilizador.html', {'utilizador': utilizador, 'tipos_utilizadores': tipos_utilizadores})
 
 def apagar_utilizador(request, id):
     utilizador = Utilizador.objects.get(id=id)
@@ -288,6 +361,9 @@ def trocarEstado(request, id):
                 cursor.execute("CALL trocar_estado_utilizador(%s)",
                                [id
                                 ])
+    print('!--------------------------------------------------------------------------------------------------------------------------')
+    print(id)
+    print('!--------------------------------------------------------------------------------------------------------------------------')
     return redirect('listar_utilizadores')
 
 ##########Fornecedores
@@ -828,3 +904,137 @@ def apagar_tipo_mao_de_obra(request, id):
     return redirect('listar_tipo_mao_de_obra')
 
 
+#Carrinho
+
+def carrinho(request):
+    # Assume user authentication is implemented
+    total = 0
+
+    # Assuming the loginToken contains user and cart information
+    token_string = request.COOKIES.get('loginToken')
+
+    # Remove leading and trailing square brackets
+    cleaned_string = token_string.strip('[()]')
+
+    # Split the string using the comma as a delimiter
+    values = cleaned_string.split(',')
+
+    # Convert the string value to an integer
+    v_utilizador_id = int(values[0])
+
+    # Retrieve equipamento IDs from the Carrinho
+    carrinho_items = Carrinho.objects.filter(utilizador_id=v_utilizador_id)
+    equipamento_ids = [item.equipamento_id for item in carrinho_items]
+
+    # Assuming you update the quantity in the MongoDB here
+
+    # Call the PostgreSQL function to get equipamentos
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_equipamentos_by_ids', [equipamento_ids])
+        equipamentos = cursor.fetchall()
+
+    # Fetch Carrinho items after updating the quantity
+    carrinho_items = Carrinho.objects.filter(utilizador_id=v_utilizador_id)
+
+    # Calculate the total price
+    for equipamento in equipamentos:
+        carrinho_item = next((item for item in carrinho_items if item.equipamento_id == equipamento[0]), None)
+        if carrinho_item:
+            total += carrinho_item.quantidade * equipamento[1]
+
+    return render(request, 'cliente/carrinho.html', {'items': zip(equipamentos, carrinho_items), 'total': total})
+
+
+def adicionar_ao_carrinho(request, equipamento_id):
+    token_string = request.COOKIES.get('loginToken')
+
+    # Remove leading and trailing square brackets
+    cleaned_string = token_string.strip('[()]')
+
+    # Split the string using the comma as a delimiter
+    values = cleaned_string.split(',')
+
+    # Convert the string value to an integer
+    v_utilizador_id = int(values[0])
+    # Check if the item is already in the cart, update the quantity if so
+    item, created = Carrinho.objects.get_or_create(Utilizador=v_utilizador_id, equipamento=equipamento_id)
+    if not created:
+        # Item already exists in the cart, update the quantity
+        item.quantidade += 1
+        item.save()
+    else:
+        carrinho = Carrinho(
+            utilizador_id=v_utilizador_id,
+            equipamento_id=equipamento_id,
+            quantidade=1
+        )
+        carrinho.save()
+    return redirect('index')
+
+# def remover_do_carrinho(request, equipamento_id):TODO: Ver esta lógica para o apagar!!
+#     token_string = request.COOKIES.get('loginToken')
+
+#     # Remove leading and trailing square brackets
+#     cleaned_string = token_string.strip('[]')
+
+#     # Split the string using the comma as a delimiter
+#     values = cleaned_string.split(',')
+
+#     # Convert the string value to an integer
+#     v_utilizador_id = int(values[0])
+
+#     # Retrieve the cart item
+#     carrinho_item = get_object_or_404(Carrinho, utilizador_id=v_utilizador_id, equipamento_id=equipamento_id)
+
+#     # Check if the quantity is more than 1, decrease it; otherwise, remove the item
+#     if carrinho_item.quantidade > 1:
+#         carrinho_item.quantidade -= 1
+#         carrinho_item.save()
+#     else:
+#         carrinho_item.delete()
+
+#     return redirect('carrinho')
+
+def comprar(request, item_id):
+    # Inserir compra nas vendas associada ao utilizador
+    
+    
+
+
+    return None
+
+
+
+
+def create_encomenda(request):
+    try:
+        # Assuming you have the user ID in the session or request
+        utilizador_id = request.session['user_id']
+
+        # Retrieve items from the Carrinho for the user
+        carrinho_items = Carrinho.objects.filter(utilizador_id=utilizador_id)
+
+        with transaction.atomic():
+            # Create an EncomendaCliente for each item in Carrinho
+            for carrinho_item in carrinho_items:
+                encomenda = EncomendaCliente.objects.create(
+                    equipamento_id=carrinho_item.equipamento_id,
+                    preco_enc_c=0,  # Set the appropriate price
+                    morada_armazem="Sample Armazem",
+                    morada_cliente="Sample Morada Cliente",
+                    quantidade=carrinho_item.quantidade,
+                    data_encomenda_cliente=timezone.now(),
+                    nome_artigo="Sample Artigo",
+                    telemovel_cliente="Sample Telemovel",
+                    metodo_pagamento="Sample Metodo Pagamento",
+                    estado="Pendente",  # Set the appropriate state
+                    cliente_id=utilizador_id
+                )
+
+            # Clear the user's Carrinho after creating Encomendas
+            carrinho_items.delete()
+
+        return render(request, 'success_template.html', {'message': 'Encomenda criada com sucesso!'})
+
+    except Exception as e:
+        return render(request, 'error_template.html', {'error': str(e)})

@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <form method="get">
-  {{myFilter.form}}
+ 
   <button class="btn btn-primary" type="submit">Pesquisar</button>
 </form>
   <div class="container">
@@ -11,16 +11,16 @@
         <div class="col-md-4">
           <div class="card">
             {% if product.imagem %}
-              <img src="{{ product.imagem.url }}" class="card-img-top card-image" alt="{{ product.nome }}">
+              <img src="{{ 0 }}" class="card-img-top card-image" alt="{{ product.8}}">
             {% endif %}
             <div class="card-body">
-              <h5 class="card-title">{{ product.nome }}</h5>
-              <p>Type: {{ product.tipo }}</p>
-              <p>Price: {{ product.preco }}</p>
-              <p>Stock: {{ product.stock }}</p>
-              <p>Discount: {{ product.desconto }}</p>
-              <p>State: {{ product.estado }}</p>
-              <a class="btn btn-primary add-to-cart" data-product-id="{{ product.id }}">Add to Cart</a>
+              <h5 class="card-title">{{ product.8 }}</h5>
+              <p>Type: {{ product.7 }}</p>
+              <p>Price: {{ product.1 }}</p>
+              <p>Stock: {{ product.2 }}</p>
+              <p>Discount: {{ product.3 }}</p>
+              <p>State: {{ product.4 }}</p>
+              <a class="btn btn-primary add-to-cart" data-product-id="{{ product.0 }}">Add to Cart</a>
             </div>
           </div>
         </div>

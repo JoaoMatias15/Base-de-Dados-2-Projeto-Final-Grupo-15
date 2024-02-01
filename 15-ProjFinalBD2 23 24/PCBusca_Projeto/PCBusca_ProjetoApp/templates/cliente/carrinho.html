@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho</title>
+    <!-- Add Bootstrap CDN link here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Carrinho</h1>
+
+    {% if items %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Equipamento ID</th>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Quantidade no Carrinho</th>
+                <!--<th>Total</th>-->
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for equipamento, carrinho_item in items %}
+                <tr>
+                    <td>{{ equipamento.0 }}</td>
+                    <td>{{ equipamento.8 }}</td>
+                    <td>{{ equipamento.1 }}</td>
+                    <td>{{ carrinho_item.quantidade }}</td>
+                    <!--<td> carrinho_item.quantidade * equipamento.1 </td>-->
+                    <td>
+                        <a class="btn btn-danger">Remover</a><!--TODO: Botão remover-->
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+        <p class="lead">Total: {{ total }}</p>
+
+    {% else %}
+        <p class="lead">O carrinho está vazio.</p>
+    {% endif %}
+
+    <a href="{% url 'index' %}" class="btn btn-primary">Voltar para a página inicial</a>
+</div>
+
+<!-- Add Bootstrap JS and Popper.js CDN links here -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

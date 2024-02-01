@@ -21,14 +21,9 @@
             <input type="password" class="form-control" id="password" name="password" required>
           </div>
           <div class="form-group">
-            <label for="tipo">Tipo de Utilizador</label>
-            <select class="form-control" id="tipoUtilizador" name="tipoUtilizador">
-              <option value="Administrador">Administrador</option>
-              <option value="Cliente">Cliente</option>
-              <option value="Comercial1">Comercial1</option>
-              <option value="Comercial2">Comercial2</option>
-            </select>
-          </div>
+            <label for="morada_utilizador">Morada</label>
+            <input type="text" class="form-control" id="morada_utilizador" name="morada_utilizador">
+        </div>
           <div class="form-group">
             <label for="NIF">NIF</label>
             <input type="text" class="form-control" id="NIF" name="NIF" required>
@@ -38,9 +33,13 @@
             <input type="text" class="form-control" id="telefone" name="telefone" required>
           </div>
           <div class="form-group">
-            <label for="estado">Estado</label>
-            <input type="text" class="form-control" id="estado" name="estado" required>
-          </div>
+            <label for="tipo_utilizador_id">Tipo Utilizador</label>
+            <select class="form-control" id="tipo_utilizador_id" name="tipo_utilizador_id" required>
+                {% for tipo_utilizador in tipo_utilizadores %}
+                    <option value="{{ tipo_utilizador.0 }}">{{ tipo_utilizador.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
           <button type="submit" class="btn btn-primary btn-block">Register</button>
         </form>

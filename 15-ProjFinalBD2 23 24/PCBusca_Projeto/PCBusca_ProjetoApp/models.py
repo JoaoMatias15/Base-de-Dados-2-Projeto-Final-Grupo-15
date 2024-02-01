@@ -32,19 +32,38 @@ class Componente(models.Model):
     margem_lucro = models.FloatField(null=True)
     stock_min = models.IntegerField(null=True)
 
+# class EncomendaCliente(models.Model):
+#     id_encomenda_cliente = models.AutoField(primary_key=True)
+#     cliente = models.ForeignKey('Utilizador', on_delete=models.SET_NULL, null=True)
+#     equipamento = models.ForeignKey('Equipamento', on_delete=models.SET_NULL, null=True)
+#     preco_enc_c = models.FloatField(null=True)
+#     morada_armazem = models.CharField(max_length=256, null=True)
+#     morada_cliente = models.CharField(max_length=256, null=True)
+#     quantidade = models.IntegerField(null=True)
+#     data_encomenda_cliente = models.DateTimeField(null=True)
+#     nome_artigo = models.CharField(max_length=256, null=True)
+#     telemovel_cliente = models.CharField(max_length=256, null=True)
+#     metodo_pagamento = models.CharField(max_length=256, null=True)
+#     estado = models.CharField(max_length=256, null=True)
 class EncomendaCliente(models.Model):
-    id_encomenda_cliente = models.AutoField(primary_key=True)
+    id_encomenda_cliente = models.IntegerField(primary_key=True)
+    equipamento_id = models.IntegerField()
+
+
+    preco_enc_c = models.FloatField()
+    morada_armazem = models.CharField(max_length=256)
+    morada_cliente = models.CharField(max_length=256)
+    quantidade = models.IntegerField()
+    data_encomenda_cliente = models.DateTimeField()
+    nome_artigo = models.CharField(max_length=256)
+    telemovel_cliente = models.CharField(max_length=256)
+    metodo_pagamento = models.CharField(max_length=256)
+    estado = models.CharField(max_length=256)
     cliente = models.ForeignKey('Utilizador', on_delete=models.SET_NULL, null=True)
-    equipamento = models.ForeignKey('Equipamento', on_delete=models.SET_NULL, null=True)
-    preco_enc_c = models.FloatField(null=True)
-    morada_armazem = models.CharField(max_length=256, null=True)
-    morada_cliente = models.CharField(max_length=256, null=True)
-    quantidade = models.IntegerField(null=True)
-    data_encomenda_cliente = models.DateTimeField(null=True)
-    nome_artigo = models.CharField(max_length=256, null=True)
-    telemovel_cliente = models.CharField(max_length=256, null=True)
-    metodo_pagamento = models.CharField(max_length=256, null=True)
-    estado = models.CharField(max_length=256, null=True)
+
+    class Meta:
+        db_table = 'PCBusca_ProjetoApp_encomendacliente'
+        unique_together = (('id_encomenda_cliente', 'equipamento_id'),)
 
 class EncomendaComponente(models.Model):
     id_encomenda_componente = models.AutoField(primary_key=True)
@@ -175,13 +194,8 @@ class TipoDeMaoDeObra(models.Model):
     id_tipo_mao_de_obra = models.AutoField(primary_key=True)
     #funcionario = models.ForeignKey('Funcionarios', on_delete=models.SET_NULL, null=True)
     descricao_tipo_mao_de_obra = models.CharField(max_length=256, null=True)
-
-
 # models_mongodb.py
-from djongo import models
-
-class MongoModel(models.Model):
-    name = models.CharField(max_length=255)
-    class Meta:
-        # especifica o banco de dados
-        app_label = 'mongodb'
+class Carrinho(models.Model):
+    utilizador_id = models.IntegerField()  # Store the ID of the Utilizador
+    equipamento_id = models.IntegerField()  # Store the ID of the Equipamento
+    quantidade = models.IntegerField()  # Store the quantity of the Equipamento
