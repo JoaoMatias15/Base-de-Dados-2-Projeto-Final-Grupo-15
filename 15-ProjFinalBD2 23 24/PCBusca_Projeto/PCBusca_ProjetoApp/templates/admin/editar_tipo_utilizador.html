@@ -1,0 +1,32 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Tipo de Utilizador</h1>
+    <form method="post" action="{% url 'editar_tipo_utilizador' tipo_utilizador.0 %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="descricao_tipo_utilizador">Descrição do Tipo de Utilizador</label>
+            <input type="text" class="form-control" id="descricao_tipo_utilizador" name="descricao_tipo_utilizador" value="{{ tipo_utilizador.1 }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Atualizar Tipo de Utilizador</button>
+    </form>
+
+    <form method="post" action="{% url 'apagar_tipo_utilizador' tipo_utilizador.0 %}">
+        {% csrf_token %}
+        <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ tipo_utilizador.0 }}')">
+            Apagar Tipo de Utilizador
+        </button>
+    </form>
+</div>
+
+<script>
+  function confirmRemoval(id) {
+    if (confirm("Tem certeza que deseja apagar este item?")) {
+      document.getElementById('removerForm' + id).submit();
+    }
+  }
+</script>
+
+{% endblock %}

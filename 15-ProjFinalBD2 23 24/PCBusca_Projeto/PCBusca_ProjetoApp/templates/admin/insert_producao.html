@@ -2,38 +2,40 @@
 {% load static %}
 
 {% block content %}
-  <h2>Inserir Produção</h2>
-  <form method="post" action="{% url 'inserir_producao' %}">
-    {% csrf_token %}
+<div class="container">
+    <h1>Inserir Produção</h1>
+    <form method="post" action="{% url 'inserir_producao' %}">
+        {% csrf_token %}
 
-    <div class="form-group">
-      <label for="horas_producao">Horas de Produção:</label>
-      <input type="number" name="horas_producao" required>
-    </div>
+        <div class="form-group">
+            <label for="horas_producao">Horas de Produção:</label>
+            <input type="number" class="form-control" id="horas_producao" name="horas_producao" required>
+        </div>
 
-    <div class="form-group">
-      <label for="custos">Custos:</label>
-      <input type="number" name="custos" required>
-    </div>
+        <div class="form-group">
+            <label for="custos">Custos:</label>
+            <input type="number" class="form-control" id="custos" name="custos" required>
+        </div>
 
-    <div class="form-group">
-      <label for="equipamento_id">Equipamento:</label>
-      <select class="form-control" id="equipamento_id" name="equipamento_id" required>
-        {% for equipamento in equipamentos %}
-          <option value="{{ equipamento.0 }}">{{ equipamento.8 }}</option>
-        {% endfor %}
-      </select>
-    </div>
+        <div class="form-group">
+            <label for="equipamento_id">Equipamento:</label>
+            <select class="form-control" id="equipamento_id" name="equipamento_id" required>
+                {% for equipamento in equipamentos %}
+                    <option value="{{ equipamento.0 }}">{{ equipamento.8 }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <div class="form-group">
-      <label for="tipo_mao_de_obra_id">Tipo Mão de Obra:</label>
-      <select class="form-control" id="tipo_mao_de_obra_id" name="tipo_mao_de_obra_id" required>
-        {% for tipo_mao_de_obra in tipos_mao_de_obra %}
-          <option value="{{ tipo_mao_de_obra.0 }}">{{ tipo_mao_de_obra.1 }}</option>
-        {% endfor %}
-      </select>
-    </div>
+        <div class="form-group">
+            <label for="tipo_mao_de_obra_id">Tipo Mão de Obra:</label>
+            <select class="form-control" id="tipo_mao_de_obra_id" name="tipo_mao_de_obra_id" required>
+                {% for tipo_mao_de_obra in tipos_mao_de_obra %}
+                    <option value="{{ tipo_mao_de_obra.0 }}">{{ tipo_mao_de_obra.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <button type="submit">Inserir</button>
-  </form>
+        <button type="submit" class="btn btn-primary">Inserir Produção</button>
+    </form>
+</div>
 {% endblock %}

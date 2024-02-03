@@ -1,0 +1,44 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Listar Tipo de Utilizador</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descrição Tipo de Utilizador</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tipo_utilizador in tipos_utilizador %}
+        <tr>
+          <td>{{ tipo_utilizador.0 }}</td>
+          <td>{{ tipo_utilizador.1 }}</td>
+          <td>
+            {% if tipo_utilizador.0 %}
+              <a href="{% url 'editar_tipo_utilizador' tipo_utilizador.0 %}" class="btn btn-primary">Editar</a>
+              <form id="removerForm{{ tipo_utilizador.0 }}" method="post" action="{% url 'apagar_tipo_utilizador' tipo_utilizador.0 %}">
+                {% csrf_token %}
+                <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ tipo_utilizador.0 }}')">
+                  Apagar
+                </button>
+              </form>
+            {% else %}
+              <p>ID indisponível</p>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <script>
+    function confirmRemoval(id) {
+      if (confirm("Tem certeza que deseja apagar este item?")) {
+        document.getElementById('removerForm' + id).submit();
+      }
+    }
+  </script>
+  <a href="{% url 'inserir_tipo_utilizador' %}" class="btn btn-primary">Inserir Tipo de Utilizador</a>
+{% endblock %}

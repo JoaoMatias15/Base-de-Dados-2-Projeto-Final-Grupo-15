@@ -1023,7 +1023,7 @@ def create_encomenda(request):
                     morada_armazem="Sample Armazem",
                     morada_cliente="Sample Morada Cliente",
                     quantidade=carrinho_item.quantidade,
-                    data_encomenda_cliente=timezone.now(),
+                    # data_encomenda_cliente=timezone.now(),
                     nome_artigo="Sample Artigo",
                     telemovel_cliente="Sample Telemovel",
                     metodo_pagamento="Sample Metodo Pagamento",
@@ -1038,3 +1038,59 @@ def create_encomenda(request):
 
     except Exception as e:
         return render(request, 'error_template.html', {'error': str(e)})
+    
+
+# tipo de utilizadores
+
+def get_tipo_utilizador(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipos_utilizadores_data')
+        tipos_utilizador = cursor.fetchall()
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print(tipos_utilizador)
+        print('--------------------------------------------------------------------------------------------------------------------------')
+
+    return render(request, 'admin/listar_tipo_utilizador.html', {'tipos_utilizador': tipos_utilizador})
+
+def inserir_tipo_utilizador(request):
+    if request.method == 'POST':
+        tipo_utilizador = request.POST['tipo_utilizador']
+
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute(
+                "CALL insert_into_tipo_utilizador(%s::varchar)",
+                [tipo_utilizador]
+            )
+
+        return redirect('listar_tipo_utilizador')
+
+    return render(request, 'admin/insert_tipo_utilizador.html')
+
+def update_tipo_utilizador(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_utilizador_by_id', [id])
+        tipo_utilizador = cursor.fetchone()
+
+    if request.method == 'POST':
+        # Obter dados do formulário
+        tipo_utilizador = request.POST['descricao_tipo_utilizador']
+
+        # Chamar procedimento para atualizar tipo_utilizador
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+            CALL update_tipo_utilizador(
+                 %s::integer, %s::varchar
+            )""",
+                [id, tipo_utilizador]
+            )
+
+        return redirect('listar_tipo_utilizador')
+
+    return render(request, 'admin/editar_tipo_utilizador.html', {'tipo_utilizador': tipo_utilizador})
+
+def apagar_tipo_utilizador(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("CALL delete_tipo_utilizador(%s)", [id])
+
+    return redirect('listar_tipo_utilizador')
