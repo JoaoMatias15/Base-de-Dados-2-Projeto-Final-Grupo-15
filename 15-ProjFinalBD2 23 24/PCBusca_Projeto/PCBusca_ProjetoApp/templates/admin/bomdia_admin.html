@@ -1,5 +1,38 @@
 {% extends 'admin/base_admin.html' %}
 {% load static %}
+{% block title %}Bom Dia Admin{% endblock %}
+
+{% block extra_styles %}
+<style>
+  body {
+    background-color: #f8f9fa;
+    color: #343a40;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .greeting-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #007bff;
+  }
+
+  p {
+    font-size: 1.2em;
+    line-height: 1.6;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<h1>>Bom dia Admin!</h1>
+<div class="container greeting-container">
+  <h1>Bom Dia, Admin!</h1>
+  <p>Espero que tenhas um dia incrível a gerir o backend.</p>
+  <p>Aproveita as funcionalidades do sistema!</p>
+  <img src="{% static 'caminho/para/sua/imagem.jpg' %}" alt="Imagem de Boas-vindas" class="custom-image">
+</div>
 {% endblock %}

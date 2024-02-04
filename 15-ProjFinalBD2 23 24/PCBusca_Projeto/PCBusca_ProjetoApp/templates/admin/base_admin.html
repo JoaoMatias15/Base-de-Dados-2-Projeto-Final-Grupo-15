@@ -6,6 +6,9 @@
   {% load static %}
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="{% static 'css/admin.css' %}">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   {% block extra_styles %}{% endblock %}
 </head>
 <body>
@@ -16,11 +19,49 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
+        {% comment %} <li class="nav-item">
+          <a class="nav-link" href="{% url 'index' %}">Home</a>
+        </li> {% endcomment %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'admin:index' %}">Home</a>
+          <a class="nav-link" href="{% url 'bomdia_admin' %}">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'admin:auth_user_changelist' %}">Users</a>
+
+        <!-- Listar -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="listarUtilizadoresDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Listar/Editar/Apagar
+          </a>
+          <div class="dropdown-menu" aria-labelledby="listarUtilizadoresDropdown">
+            <a class="dropdown-item" href="{% url 'listar_utilizadores' %}">Utilizadores</a>
+            <a class="dropdown-item" href="{% url 'listar_fornecedores' %}">Fornecedores</a>
+            <a class="dropdown-item" href="{% url 'listar_componentes' %}">Componentes</a>
+            <a class="dropdown-item" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
+            <a class="dropdown-item" href="{% url 'listar_producoes' %}">Produções</a>
+            <a class="dropdown-item" href="{% url 'listar_funcionario' %}">Funcionários</a>
+            <a class="dropdown-item" href="{% url 'listar_tipo_utilizador' %}">Tipos de Utilizadores</a>
+            <a class="dropdown-item" href="{% url 'listar_tipo_componentes' %}">Tipos de Componentes</a>
+            <a class="dropdown-item" href="{% url 'listar_tipo_equipamentos' %}">Tipos de Equipamentos</a>
+            <a class="dropdown-item" href="{% url 'listar_tipo_mao_de_obra' %}">Tipos de Mão de Obra</a>
+          </div>
+        </li>
+        
+        <!-- Inserir -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="inserirUtilizadorDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Inserir
+          </a>
+          <div class="dropdown-menu" aria-labelledby="inserirUtilizadorDropdown">
+            <a class="dropdown-item" href="{% url 'criar_utilizador' %}">Utilizador</a>
+            <a class="dropdown-item" href="{% url 'inserir_forn' %}">Fornecedor</a>
+            <a class="dropdown-item" href="{% url 'inserir_componente' %}">Componente</a>
+            <a class="dropdown-item" href="{% url 'inserir_equipamento' %}">Equipamento</a>
+            <a class="dropdown-item" href="{% url 'inserir_producao' %}">Produção</a>
+            <a class="dropdown-item" href="{% url 'inserir_funcionario' %}">Funcionário</a>
+            <a class="dropdown-item" href="{% url 'inserir_tipo_utilizador' %}">Tipo de Utilizador</a>
+            <a class="dropdown-item" href="{% url 'inserir_tipo_componente' %}">Tipo de Componente</a>
+            <a class="dropdown-item" href="{% url 'inserir_tipo_equipamento' %}">Tipo de Equipamento</a>
+            <a class="dropdown-item" href="{% url 'inserir_tipo_mao_de_obra' %}">Tipo de Mão de Obra</a>
+          </div>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'admin:logout' %}">Logout</a>
