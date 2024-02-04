@@ -14,7 +14,7 @@ urlpatterns =[
     path('admin', views.bomdia_admin, name='bomdia_admin'),
     path('admin/listar_utilizadores/', views.listar_utilizadores, name='listar_utilizadores'),
     path('admin/criar_utilizadores/', views.criar_utilizador, name='criar_utilizador'),
-    path('admin/editar/<int:id>/', views.editar_utilizador, name='editar_utilizador'),
+    path('admin/editar/<int:id>/', views.update_utilizador, name='editar_utilizador'),
     #path('admin/apagar/<int:id>/', views.apagar_utilizador, name='apagar_utilizador'),
     path('admin/trocar_estado_utilizador/<int:id>/', views.trocarEstado,name='trocar_estado_utilizador'),
     #TODO:

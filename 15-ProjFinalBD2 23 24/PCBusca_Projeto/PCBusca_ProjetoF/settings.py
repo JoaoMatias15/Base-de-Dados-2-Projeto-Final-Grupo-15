@@ -88,6 +88,13 @@ DATABASES = {
         'PASSWORD': 'bd2pass123',
         'HOST': 'localhost',
     },
+    'Cliente': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'BD2_G15_Database',
+        'USER': 'Cliente',
+        'PASSWORD': 'bd2pass123',
+        'HOST': 'localhost',
+    },
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
     #     'NAME': 'BD2_G15_Database',

@@ -297,7 +297,7 @@ def editar_utilizador(request, id):
 def update_utilizador(request, id):
     # Get 'utilizador' data by ID
     with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_utilizador_by_id', [id])
+        cursor.callproc('get_user_by_id', [id])
         utilizador = cursor.fetchone()
 
     # Get 'tipo utilizadores' data
@@ -368,7 +368,7 @@ def trocarEstado(request, id):
 
 ##########Fornecedores
 def listar_fornecedores(request):
-    with connections['postgres'].cursor() as cursor:       
+    with connections['Cliente'].cursor() as cursor:       
         cursor.callproc('get_fornecedores_data')
         fornecedores = cursor.fetchall()
     context = {'fornecedores': fornecedores}
