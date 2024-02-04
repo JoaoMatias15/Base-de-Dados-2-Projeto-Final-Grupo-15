@@ -368,7 +368,7 @@ def trocarEstado(request, id):
 
 ##########Fornecedores
 def listar_fornecedores(request):
-    with connections['Cliente'].cursor() as cursor:       
+    with connections['postgres'].cursor() as cursor:       
         cursor.callproc('get_fornecedores_data')
         fornecedores = cursor.fetchall()
     context = {'fornecedores': fornecedores}
