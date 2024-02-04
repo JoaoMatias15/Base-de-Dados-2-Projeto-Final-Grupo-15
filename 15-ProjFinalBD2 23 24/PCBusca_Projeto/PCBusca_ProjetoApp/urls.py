@@ -51,4 +51,8 @@ urlpatterns =[
     path('admin/inserir_tipo_utilizador/', views.inserir_tipo_utilizador, name='inserir_tipo_utilizador'),
     path('admin/editar_tipo_utilizador/<int:id>/', views.update_tipo_utilizador, name='editar_tipo_utilizador'),
     path('admin/apagar_tipo_utilizador/<int:id>/', views.apagar_tipo_utilizador, name='apagar_tipo_utilizador'),
+    path('admin/listar_funcionario/', views.get_funcionario, name='listar_funcionario'),
+    path('admin/inserir_funcionario/', views.insert_funcionario, name='inserir_funcionario'),
+    path('admin/editar_funcionario/<int:id>/', views.editar_funcionario, name='editar_funcionario'),
+    path('admin/apagar_funcionario/<int:id>/', views.apagar_funcionario, name='apagar_funcionario'),
 ]

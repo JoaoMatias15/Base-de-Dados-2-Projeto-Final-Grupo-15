@@ -1,0 +1,42 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Funcionário</h1>
+    <form method="post" action="{% url 'editar_funcionario' funcionario.0 %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="nome_funcionario">Nome do Funcionário:</label>
+            <input type="text" class="form-control" id="nome_funcionario" name="nome_funcionario" value="{{ funcionario.1 }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="morada_funcionario">Morada do Funcionário:</label>
+            <input type="text" class="form-control" id="morada_funcionario" name="morada_funcionario" value="{{ funcionario.2 }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="telemovel_funcionario">Telemóvel do Funcionário:</label>
+            <input type="number" class="form-control" id="telemovel_funcionario" name="telemovel_funcionario" value="{{ funcionario.3 }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="idade">Idade do Funcionário:</label>
+            <input type="number" class="form-control" id="idade" name="idade" value="{{ funcionario.4 }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo_mao_de_obra_id">Tipo Mão de Obra:</label>
+            <select class="form-control" id="tipo_mao_de_obra_id" name="tipo_mao_de_obra_id" required>
+                {% for tipo_mao_de_obra in tipos_mao_de_obra %}
+                    <option value="{{ tipo_mao_de_obra.0 }}" {% if tipo_mao_de_obra.0 == funcionario.5 %}selected{% endif %}>{{ tipo_mao_de_obra.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    </form>
+</div>
+{% endblock %}

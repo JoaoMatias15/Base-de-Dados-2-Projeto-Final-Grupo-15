@@ -1094,3 +1094,88 @@ def apagar_tipo_utilizador(request, id):
             cursor.execute("CALL delete_tipo_utilizador(%s)", [id])
 
     return redirect('listar_tipo_utilizador')
+
+# Funcionarios
+
+from django.shortcuts import render, redirect
+from django.db import connections
+from django.http import HttpResponseForbidden
+
+def get_funcionario(request):
+    try:
+        with connections['postgres'].cursor() as cursor:
+            cursor.callproc('get_funcionarios_data')
+            funcionarios = cursor.fetchall()
+    except Exception as e:
+        return HttpResponseForbidden("Você não tem permissão para acessar esses dados.")
+
+    return render(request, 'admin/listar_funcionario.html', {'funcionarios': funcionarios})
+
+def insert_funcionario(request):
+    if request.method == 'POST':
+        # Obter dados do formulário
+        nome_funcionario = request.POST['nome_funcionario']
+        morada_funcionario = request.POST['morada_funcionario']
+        telemovel_funcionario = int(request.POST['telemovel_funcionario'])
+        idade = int(request.POST['idade'])
+        tipo_mao_de_obra_id = int(request.POST['tipo_mao_de_obra_id'])
+
+        # Chamar procedimento para inserir funcionário
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute(
+                "CALL insert_into_funcionarios(%s::varchar, %s::varchar, %s::integer, %s::integer, %s::integer)",
+                [nome_funcionario, morada_funcionario, telemovel_funcionario, idade, tipo_mao_de_obra_id]
+            )
+
+        return redirect('listar_funcionario')
+
+    # Obter dados necessários para dropdowns (tipos de mão de obra)
+
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_mao_de_obra_data')
+        tipos_mao_de_obra = cursor.fetchall()
+
+    return render(request, 'admin/insert_funcionario.html', {'tipos_mao_de_obra': tipos_mao_de_obra})
+
+def editar_funcionario(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_funcionario_by_id', [id])
+        funcionario = cursor.fetchone()
+
+    if request.method == 'POST':
+        # Obter dados do formulário
+        nome_funcionario = request.POST['nome_funcionario']
+        morada_funcionario = request.POST['morada_funcionario']
+        telemovel_funcionario = int(request.POST['telemovel_funcionario'])
+        idade = int(request.POST['idade'])
+        tipo_mao_de_obra_id = int(request.POST['tipo_mao_de_obra_id'])
+
+        # Chamar procedimento para atualizar funcionário
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+            CALL update_funcionario(
+                 %s::integer, %s::varchar, %s::varchar, %s::integer, %s::integer, %s::integer
+            )""",
+                [id, nome_funcionario, morada_funcionario, telemovel_funcionario, idade, tipo_mao_de_obra_id]
+            )
+
+        return redirect('listar_funcionario')
+
+    # Obter dados necessários para dropdowns (tipos de mão de obra)
+
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_mao_de_obra_data')
+        tipos_mao_de_obra = cursor.fetchall()
+
+    return render(request, 'admin/editar_funcionario.html', {
+        'funcionario': funcionario,
+        'tipos_mao_de_obra': tipos_mao_de_obra
+    })
+
+def apagar_funcionario(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("CALL delete_funcionario(%s)", [id])
+
+    return redirect('listar_funcionario')
+
