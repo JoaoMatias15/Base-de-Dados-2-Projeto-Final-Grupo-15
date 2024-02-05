@@ -1,0 +1,40 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Listar Tipo de Equipamentos</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Designação</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tipo_equipamento in tipo_equipamentos %}
+        <tr>
+          <td>{{ tipo_equipamento.0 }}</td>
+          <td>{{ tipo_equipamento.1 }}</td>
+          <td>
+            <a href="{% url 'editar_tipo_equipamento' tipo_equipamento.0 %}" class="btn btn-primary">Editar</a>
+            <form method="post" action="{% url 'apagar_tipo_equipamento' tipo_equipamento.0 %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger" onclick="confirmRemoval('{{ tipo_equipamento.0 }}')">
+                Apagar
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+   <script>
+    function confirmRemoval(id) {
+      if (confirm("Tem certeza que deseja apagar este item?")) {
+        document.getElementById('removerForm' + id).submit();
+      }
+    }
+  </script>
+  <a href="{% url 'inserir_tipo_equipamento' %}" class="btn btn-primary">Inserir Tipo de Equipamento</a>
+{% endblock %}

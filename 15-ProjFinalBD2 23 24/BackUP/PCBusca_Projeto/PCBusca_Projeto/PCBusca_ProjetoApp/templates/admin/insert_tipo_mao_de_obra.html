@@ -1,0 +1,16 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Inserir Tipo de Mão de Obra</h1>
+    <form method="post" action="{% url 'inserir_tipo_mao_de_obra' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="descricao_tipo_mao_de_obra">Descrição do Tipo de Mão de Obra</label>
+            <input type="text" class="form-control" id="descricao_tipo_mao_de_obra" name="descricao_tipo_mao_de_obra" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Inserir Tipo de Mão de Obra</button>
+    </form>
+</div>
+{% endblock %}

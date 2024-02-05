@@ -1,0 +1,56 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Componente</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nome_componente">Nome Componente</label>
+            <input type="text" class="form-control" id="nome_componente" name="nome_componente" value="{{ componente.1 }}">
+        </div>
+        <div class="form-group">
+            <label for="stock">Stock</label>
+            <input type="number" class="form-control" id="stock" name="stock" value="{{ componente.2 }}">
+        </div>
+        <div class="form-group">
+            <label for="preco_compra">Preço Compra</label>
+            <input type="number" class="form-control" id="preco_compra" name="preco_compra" value="{{ componente.3 }}">
+        </div>
+        <div class="form-group">
+            <label for="peso">Peso</label>
+            <input type="number" class="form-control" id="peso" name="peso" value="{{ componente.4 }}">
+        </div>
+        <div class="form-group">
+            <label for="caracteristicas">Caracteristicas</label>
+            <input type="text" class="form-control" id="caracteristicas" name="caracteristicas" value="{{ componente.5 }}">
+        </div>
+        <div class="form-group">
+            <label for="margem_lucro">Margem Lucro</label>
+            <input type="number" class="form-control" id="margem_lucro" name="margem_lucro" value="{{ componente.6 }}">
+        </div>
+        <div class="form-group">
+            <label for="stock_min">Stock Min</label>
+            <input type="number" class="form-control" id="stock_min" name="stock_min" value="{{ componente.7 }}">
+        </div>
+        <div class="form-group">
+            <label for="fornecedor_id">Fornecedor</label>
+            <select class="form-control" id="fornecedor_id" name="fornecedor_id" required>
+                {% for fornecedor in fornecedores %}
+                    <option value="{{ fornecedor.0 }}">{{ fornecedor.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="tipo_componente_id">Tipo Componente</label>
+            <select class="form-control" id="tipo_componente_id" name="tipo_componente_id" required>
+                {% for tipo_componente in tipo_componentes %}
+                    <option value="{{ tipo_componente.0 }}">{{ tipo_componente.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar Componente</button>
+    </form>
+</div>
+{% endblock %}

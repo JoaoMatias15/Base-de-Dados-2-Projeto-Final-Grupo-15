@@ -1,0 +1,58 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nome Componente</th>
+      <th>Stock</th>
+      <th>Preço Compra</th>
+      <th>Peso</th>
+      <th>Características</th>
+      <th>Margem de Lucro</th>
+      <th>Fornecedor</th>
+      <th>Tipo Componente</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for componente in componentes %}
+      <tr>
+        <td>{{ componente.1 }}</td>  {# Nome Componente #}
+        <td>{{ componente.2 }}</td>  {# Stock #}
+        <td>{{ componente.3 }}</td>  {# Preço Compra #}
+        <td>{{ componente.4 }}</td>  {# Peso #}
+        <td>{{ componente.5 }}</td>  {# Características #}
+        <td>{{ componente.6 }}</td>  {# Margem de Lucro #}
+        <td>{{ componente.8|get_fornecedor_name }}</td>  {# Fornecedor #}
+        <td>{{ componente.9|get_tipo_componente_name }}</td> {# Tipo Componente #}
+        <td>
+          {% if componente.0 %}
+            <a href="{% url 'editar_componente' componente.0 %}" class="btn btn-primary">Editar</a>
+            <form id="removerForm{{ componente.0 }}" method="post" action="{% url 'apagar_componente' componente.0 %}">
+              {% csrf_token %}
+              <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ componente.0 }}')">
+                Apagar
+              </button>
+            </form>
+          {% else %}
+            <p>ID indisponível</p>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<!--test-->
+<script>
+  function confirmRemoval(id) {
+    var confirmation = confirm("Tem certeza que deseja remover?");
+    if (confirmation) {
+      document.getElementById('removerForm' + id).submit();
+    }
+}
+</script>
+
+{% endblock %}

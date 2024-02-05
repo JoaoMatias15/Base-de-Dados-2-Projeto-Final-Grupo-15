@@ -1,0 +1,32 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Fornecedor</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Nome</label>
+            <input type="text" class="form-control" id="nome_fornecedor" name="nome_fornecedor" value="{{ forn.1 }}">
+        </div>
+        <div class="form-group">
+            <label for="morada_fornecedor">Morada</label>
+            <input type="text" class="form-control" id="morada_fornecedor" name="morada_fornecedor" value="{{ forn.2 }}">
+        </div>
+        <div class="form-group">
+            <label for="NIF">NIF</label>
+            <input type="number" class="form-control" id="nif" name="nif" value="{{ forn.3 }}">
+        </div>
+        <div class="form-group">
+            <label for="telemovel">Telemovel</label>
+            <input type="number" class="form-control" id="telemovel_fornecedor" name="telemovel_fornecedor" value="{{ forn.5}}">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email_fornecedor" name="email_fornecedor" value="{{ forn.4 }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+</div>
+{% endblock %}

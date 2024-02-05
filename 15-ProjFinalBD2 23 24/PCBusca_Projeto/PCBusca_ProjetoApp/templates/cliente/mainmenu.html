@@ -1,30 +1,46 @@
 {% extends 'cliente/base.html' %}
 {% load static %}
+{% load custom_filters %}
+{% block title %}Main Menu{% endblock %}
 {% block content %}
-<form method="get">
- 
-  <button class="btn btn-primary" type="submit">Pesquisar</button>
-</form>
-  <div class="container">
-    <div class="row">
-      {% for product in products %}
-        <div class="col-md-4">
-          <div class="card">
-            {% if product.imagem %}
-              <img src="{{ 0 }}" class="card-img-top card-image" alt="{{ product.8}}">
-            {% endif %}
-            <div class="card-body">
-              <h5 class="card-title">{{ product.8 }}</h5>
-              <p>Type: {{ product.7 }}</p>
-              <p>Price: {{ product.1 }}</p>
-              <p>Stock: {{ product.2 }}</p>
-              <p>Discount: {{ product.3 }}</p>
-              <p>State: {{ product.4 }}</p>
-              <a class="btn btn-primary add-to-cart" data-product-id="{{ product.0 }}">Add to Cart</a>
-            </div>
+<div class="container">
+  <div class="row">
+    {% for product in equipamentos %}
+    
+      <div class="col-md-4">
+        <div class="card">
+          {% if product.9 %}
+          <img src="{% static 'images/' %}{{product.9}}" class="card-img-top card-image" alt="No Image">
+          {% endif %}
+          {% if not product.9 %}
+            <img src="{% static 'images/No_Image_Available.jpg' %}" class="card-img-top card-image" alt="No Image Available">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ product.8 }}</h5>
+            <p>Type: {{ product.7|get_tipo_equipamento_name }}</p>
+            <p>Price: {{ product.1 }}</p>
+            <p>Stock: {{ product.3 }}</p>
+            <p>Description: {{ product.4 }}</p>
+            <a href="{% url 'adicionar_ao_carrinho' product.0 %}" class="btn btn-primary add-to-cart">Add to Cart</a>
           </div>
         </div>
-      {% endfor %}
-    </div>
+      </div>
+    {% endfor %}
   </div>
+</div>
+
+{% if message %}
+  <div class="alert alert-success" role="alert" id="success-alert">
+    {{ message }}
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Close the alert after a few seconds
+  setTimeout(function() {
+    $('#success-alert').fadeOut('slow');
+  }, 3000);
+</script>
 {% endblock %}

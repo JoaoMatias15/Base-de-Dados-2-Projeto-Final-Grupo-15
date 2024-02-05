@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>XPTO Website</title>
+    <title>PCBusca</title>
     
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -12,7 +12,7 @@
   <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">XPTO Website</a>
+      <a class="navbar-brand" href="#">PCBusca</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -22,16 +22,17 @@
             <a class="nav-link" href="{% url 'index' %}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Lista de Top Sellers</a>
+            <a class="nav-link" href="#">TODO:MinhasEncomendas</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}">Login</a>
           </li>
         </ul>
-        {% comment %} <a href = "{% url 'cart' %}" class="shopping-cart-icon">
-          <img src="{% static 'images/shopping-cart-icon.svg' %} " width="30" height="30" alt="Shopping Cart">
-          <span class="badge badge-pill badge-danger shopping-cart-badge" id="cart-items-count">0</span>
-        </a> {% endcomment %}
+        <div class="ml-auto">
+          <a href="{% url 'carrinho' %}" class="shopping-cart-icon">
+            <img src="{% static 'images/shopping-cart-outline.svg' %}" width="30" height="30" alt="Shopping Cart">
+          </a> 
+        </div>
       </div>
     </nav>
     <!-- Bloco de conteudo -->
@@ -41,7 +42,7 @@
     <!-- Footer -->
     <footer class="bg-light py-3 mt-5">
       <div class="container">
-        <p class="text-center">Copyright &copy; {{ current_year }} XPTO Website</p>
+        <p class="text-center">Copyright &copy; {{ current_year }} PCBusca</p>
       </div>
     </footer>
     <script src="{% static 'js/main.js' %}"></script>

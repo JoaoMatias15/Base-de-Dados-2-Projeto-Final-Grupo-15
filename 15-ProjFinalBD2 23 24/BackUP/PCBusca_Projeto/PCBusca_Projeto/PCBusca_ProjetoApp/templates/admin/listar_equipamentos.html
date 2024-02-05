@@ -1,0 +1,59 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nome Equipamento</th>
+      <th>Preço Equipamento</th>
+      <th>Preço de Produção</th>
+      <th>Stock Equipamento</th>
+      <th>Características Equipamento</th>
+      <th>Margem de Lucro Equipamento</th>
+      <th>Stock Mínimo Equipamento</th>
+      <th>Tipo de Equipamento</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for equipamento in equipamentos %}
+  <tr>
+    <td>{{ equipamento.8 }}</td>
+    <td>{{ equipamento.1 }}</td>
+    <td>{{ equipamento.2 }}</td>
+    <td>{{ equipamento.3 }}</td>
+    <td>{{ equipamento.4 }}</td>
+    <td>{{ equipamento.5 }}</td>
+    <td>{{ equipamento.6 }}</td>
+    <td>{{ equipamento.7|get_tipo_equipamento_name }}</td>  
+    <td>
+      {% if equipamento.0 %}
+        <a href="{% url 'editar_equipamento' equipamento.0 %}" class="btn btn-primary">Editar</a>
+        <form id="removerEquipamentoForm{{ equipamento.0 }}" method="post" action="{% url 'apagar_equipamento' equipamento.0 %}">
+          {% csrf_token %}
+          <button type="button" class="btn btn-danger" onclick="confirmRemovalEquipamento('{{ equipamento.0 }}')">
+            Apagar
+          </button>
+        </form>
+      {% else %}
+        <p>ID indisponível</p>
+      {% endif %}
+    </td>
+  </tr>
+{% endfor %}
+
+  </tbody>
+</table>
+<!--test-->
+<script>
+  function confirmRemovalEquipamento(id) {
+    var confirmation = confirm("Tem certeza que deseja remover?");
+    if (confirmation) {
+      document.getElementById('removerEquipamentoForm' + id).submit();
+    }
+  }
+</script>
+
+{% endblock %}

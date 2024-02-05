@@ -1,0 +1,14 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+  <h2>Editar Tipo de Equipamento</h2>
+  <form method="post" action="{% url 'editar_tipo_equipamento' tipo_equipamento.0 %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="designacao_tipo_equipamento">Designação do Tipo de Equipamento</label>
+      <input type="text" class="form-control" id="designacao_tipo_equipamento" name="designacao_tipo_equipamento" value="{{ tipo_equipamento.1 }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Atualizar</button>
+  </form>
+  <a href="{% url 'listar_tipo_equipamentos' %}" class="btn btn-secondary">Voltar para a lista de Tipo de Equipamento</a>
+{% endblock %}

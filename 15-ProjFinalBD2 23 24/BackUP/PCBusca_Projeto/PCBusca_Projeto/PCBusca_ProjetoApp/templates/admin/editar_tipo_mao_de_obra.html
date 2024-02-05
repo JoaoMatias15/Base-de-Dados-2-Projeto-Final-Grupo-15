@@ -1,0 +1,32 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Tipo de Mão de Obra</h1>
+    <form method="post" action="{% url 'editar_tipo_mao_de_obra' tipo_mao_de_obra.0 %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="descricao_tipo_mao_de_obra">Descrição do Tipo de Mão de Obra</label>
+            <input type="text" class="form-control" id="descricao_tipo_mao_de_obra" name="descricao_tipo_mao_de_obra" value="{{ tipo_mao_de_obra.1 }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Atualizar Tipo de Mão de Obra</button>
+    </form>
+
+    <form method="post" action="{% url 'apagar_tipo_mao_de_obra' tipo_mao_de_obra.0 %}">
+        {% csrf_token %}
+        <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ tipo_mao_de_obra.0 }}')">
+            Apagar Tipo de Mão de Obra
+        </button>
+    </form>
+</div>
+
+<script>
+  function confirmRemoval(id) {
+    if (confirm("Tem certeza que deseja apagar este item?")) {
+      document.getElementById('removerForm' + id).submit();
+    }
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "cliente/base.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Finalizar Encomenda</h2>
+  
+  <form method="post" action="{% url 'finalizar_compra' %}">
+    {% csrf_token %}
+    
+    <label for="metodo_pagamento">Método de Pagamento:</label>
+    <select name="metodo_pagamento" id="metodo_pagamento" required>
+      <option value="cartao_credito">Cartão de Crédito</option>
+      <option value="transferencia">Transferência Bancária</option>
+      <option value="mbway">MB Way</option>
+      <option value="Cobranca">Pagamento à Cobrança</option>
+    </select>
+    
+    <br>
+    
+    <label for="morada_encomenda">Morada de Encomenda:</label>
+    <input type="text" name="morada_encomenda" id="morada_encomenda" required>
+    
+    <br>
+    
+    <input type="submit" value="Finalizar Encomenda">
+  </form>
+  
+{% endblock %}

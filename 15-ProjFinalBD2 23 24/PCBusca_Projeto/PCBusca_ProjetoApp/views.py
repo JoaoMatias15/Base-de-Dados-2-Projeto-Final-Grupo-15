@@ -12,7 +12,8 @@ from django.forms import ModelForm
 from .models import Carrinho, EncomendaCliente
 from django.db import transaction
 from django import forms
-
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from .filters import EquipamentoFilter
 from .forms import CreateUserForm,AuthForm,UtilizadorForm,UtilizadorForm2,FornecedorForm,ComponenteForm
 from .models import Utilizador
@@ -107,12 +108,12 @@ def login_view(request):
 
 def index(request):
     with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_equipamentos_data')
+        cursor.callproc('get_equipamentos_data_users')
         equipamentos = cursor.fetchall()
         print('--------------------------------------------------------------------------------------------------------------------------')
         print(equipamentos)
         print('--------------------------------------------------------------------------------------------------------------------------')
-    return render(request, 'cliente/mainmenu.html', {'equipamento': equipamentos})
+    return render(request, 'cliente/mainmenu.html', {'equipamentos': equipamentos,})
 
 # def cart(request):
 #     # Get the cart from the cookies
@@ -236,15 +237,7 @@ def criar_utilizador(request):
         tipo_utilizadores = cursor.fetchall()
     return render(request, 'admin/criar_utilizador.html', {'tipo_utilizadores': tipo_utilizadores})
 
-# FUNCTION public.insert_into_utilizador_admin(
-# 	p_morada_utilizador character varying,
-# 	p_nome character varying,
-# 	p_email character varying,
-# 	p_telemovel numeric,
-# 	p_nif numeric,
-# 	p_tipo_utilizador_id integer)
 
-    # Fetch 'tipo utilizadores' data for the form
     
 
 # def editar_utilizador(request, id):
@@ -261,37 +254,37 @@ def criar_utilizador(request):
 #         ])
 #     return render(request, 'admin/editar_utilizador.html', {'user': user})
 
-def editar_utilizador(request, id):
-    with connections['postgres'].cursor() as cursor:
-        cursor.callproc('get_user_by_id', [
-            id
-        ])
-        user = cursor.fetchone()
-    #TODO: Meter isto a editar, nao esta a enviar os dados para a base de dados
-    print(user)
-    form = UtilizadorForm2(request.POST, initial={
-            'nome': user[2],
-            'morada_utilizador': user[1],
-            'email': user[3],
-            'NIF': user[5],
-            'telemovel': user[4],
-        })
-    if request.method == 'POST':
-        print('--------------------------------------------------------------------------------------------------------------------------')
-        print(form.errors)
-        print('--------------------------------------------------------------------------------------------------------------------------')
-        if form.is_valid():
-            with connections['postgres'].cursor() as cursor:
-                cursor.execute("CALL update_user(%s, %s, %s, %s, %s, %s)",
-                               [id, form.cleaned_data['morada_utilizador'],
-                                form.cleaned_data['nome'],
-                                form.cleaned_data['email'],
-                                form.cleaned_data['telemovel'],
-                                form.cleaned_data['NIF']
-                                ])
+# def editar_utilizador(request, id):
+#     with connections['postgres'].cursor() as cursor:
+#         cursor.callproc('get_user_by_id', [
+#             id
+#         ])
+#         user = cursor.fetchone()
+#     #TODO: Meter isto a editar, nao esta a enviar os dados para a base de dados
+#     print(user)
+#     form = UtilizadorForm2(request.POST, initial={
+#             'nome': user[2],
+#             'morada_utilizador': user[1],
+#             'email': user[3],
+#             'NIF': user[5],
+#             'telemovel': user[4],
+#         })
+#     if request.method == 'POST':
+#         print('--------------------------------------------------------------------------------------------------------------------------')
+#         print(form.errors)
+#         print('--------------------------------------------------------------------------------------------------------------------------')
+#         if form.is_valid():
+#             with connections['postgres'].cursor() as cursor:
+#                 cursor.execute("CALL update_user(%s, %s, %s, %s, %s, %s)",
+#                                [id, form.cleaned_data['morada_utilizador'],
+#                                 form.cleaned_data['nome'],
+#                                 form.cleaned_data['email'],
+#                                 form.cleaned_data['telemovel'],
+#                                 form.cleaned_data['NIF']
+#                                 ])
                 
-            return redirect('listar_utilizadores')    
-    return render(request, 'admin/editar_utilizador.html', {'user': user})
+#             return redirect('listar_utilizadores')    
+#     return render(request, 'admin/editar_utilizador.html', {'user': user})
 
 
 def update_utilizador(request, id):
@@ -623,19 +616,21 @@ def insert_equipamento(request):
         margem_lucro_equip = float(request.POST['margem_lucro_equip'])
         stock_min_equip = int(request.POST['stock_min_equip'])
         tipo_equipamento_id = int(request.POST['tipo_equipamento_id'])
-
+        imagem_equip = request.FILES['imagem_equip'] if 'imagem_equip' in request.FILES else None
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print('Bomdia crl')
+        print(imagem_equip)
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        image_path = None
+        if imagem_equip:
+            
+            image_path = default_storage.save(imagem_equip.name, ContentFile(imagem_equip.read()))
         # Call procedure to insert into equipamentos
         with connections['postgres'].cursor() as cursor:
-            #query = "CALL insert_into_equipamentos(%s::varchar, %s::float8, %s::float8, %s::integer, %s::varchar, %s::float8, %s::integer, %s::integer, %s::integer)"
-            #print("Executing SQL:", cursor.mogrify(query, [nome_equipamento, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip, margem_lucro_equip, stock_min_equip, componente_id, tipo_equipamento_id]))
-
-#             cursor.execute(
-#     "CALL insert_into_equipamentos(%s::varchar, %s::float8, %s::float8, %s::integer, %s::varchar, %s::float8, %s::integer, %s::integer, %s::integer)",
-#     [nome_equipamento, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip, margem_lucro_equip, stock_min_equip, componente_id, tipo_equipamento_id]
-# )      
+            
             cursor.execute(
-    "CALL insert_into_equipamentos(%s::varchar, %s::float8, %s::float8, %s::integer, %s::varchar, %s::integer, %s::integer, %s::integer)",
-    [nome_equipamento, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip, int(margem_lucro_equip), stock_min_equip, tipo_equipamento_id]
+    "CALL insert_into_equipamentos(%s::varchar, %s::float8, %s::float8, %s::integer, %s::varchar, %s::integer, %s::integer, %s::integer, %s::varchar)",
+    [nome_equipamento, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip, int(margem_lucro_equip), stock_min_equip, tipo_equipamento_id, image_path]
 )
 
 
@@ -668,16 +663,23 @@ def update_equipamento(request, id):
         stock_min_equip = request.POST['stock_min_equip']
         
         tipo_equipamento_id = request.POST['tipo_equipamento_id']
-
+        imagem_equip = request.FILES['imagem_equip'] if 'imagem_equip' in request.FILES else None
+        image_path = None
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print('Bomdia crl')
+        print(imagem_equip)
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        if imagem_equip:
+            image_path = default_storage.save(imagem_equip.name, ContentFile(imagem_equip.read()))
         # Call procedure to update equipamento
         with connections['postgres'].cursor() as cursor:
             cursor.execute("""
             CALL update_equipamento(
                  %s::integer,%s::float8, %s::float8, %s::integer, %s::varchar,
-                %s::integer, %s::integer, %s::integer, %s::varchar
+                %s::integer, %s::integer, %s::integer, %s::varchar,%s::varchar
             )""",
                 [id, preco_equipamento, preco_de_producao, stock_equip, caracteristicas_equip,
-                 margem_lucro_equip, stock_min_equip, tipo_equipamento_id,nome_equipamento]
+                 margem_lucro_equip, stock_min_equip, tipo_equipamento_id,nome_equipamento, image_path]
             )
 
         return redirect('listar_equipamentos')
@@ -945,7 +947,7 @@ def carrinho(request):
     return render(request, 'cliente/carrinho.html', {'items': zip(equipamentos, carrinho_items), 'total': total})
 
 
-def adicionar_ao_carrinho(request, equipamento_id):
+def adicionar_ao_carrinho(request, p_equipamento_id):
     token_string = request.COOKIES.get('loginToken')
 
     # Remove leading and trailing square brackets
@@ -956,88 +958,121 @@ def adicionar_ao_carrinho(request, equipamento_id):
 
     # Convert the string value to an integer
     v_utilizador_id = int(values[0])
+
     # Check if the item is already in the cart, update the quantity if so
-    item, created = Carrinho.objects.get_or_create(Utilizador=v_utilizador_id, equipamento=equipamento_id)
-    if not created:
-        # Item already exists in the cart, update the quantity
-        item.quantidade += 1
-        item.save()
+    item, created = Carrinho.objects.get_or_create(utilizador_id=v_utilizador_id, equipamento_id=p_equipamento_id)
+    
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_equipamento_by_id', [p_equipamento_id])
+        equipamento = cursor.fetchone()
+
+    # Check if adding the new quantity exceeds the available stock
+    
+
+    # If the item is already in the cart, update the quantity
+    if created:
+        item.quantidade = 1
     else:
-        carrinho = Carrinho(
-            utilizador_id=v_utilizador_id,
-            equipamento_id=equipamento_id,
-            quantidade=1
-        )
-        carrinho.save()
+        item.refresh_from_db()
+        if item.quantidade+1 > equipamento[2]:
+            with connections['postgres'].cursor() as cursor:
+                cursor.callproc('get_equipamentos_data_users')
+                equipamentos = cursor.fetchall()
+            return render(request, 'cliente/mainmenu.html', {'equipamentos':equipamentos,'message': 'Quantidade indisponível!'})
+        item.quantidade += 1
+    
+    item.save()
+
     return redirect('index')
 
-# def remover_do_carrinho(request, equipamento_id):TODO: Ver esta lógica para o apagar!!
-#     token_string = request.COOKIES.get('loginToken')
+def remover_do_carrinho(request, p_equipamento_id):
+    token_string = request.COOKIES.get('loginToken')
 
-#     # Remove leading and trailing square brackets
-#     cleaned_string = token_string.strip('[]')
+    # Remove leading and trailing square brackets
+    cleaned_string = token_string.strip('[()]')
 
-#     # Split the string using the comma as a delimiter
-#     values = cleaned_string.split(',')
+    # Split the string using the comma as a delimiter
+    values = cleaned_string.split(',')
 
-#     # Convert the string value to an integer
-#     v_utilizador_id = int(values[0])
+    # Convert the string value to an integer
+    v_utilizador_id = int(values[0])
 
-#     # Retrieve the cart item
-#     carrinho_item = get_object_or_404(Carrinho, utilizador_id=v_utilizador_id, equipamento_id=equipamento_id)
+    # Retrieve the cart item
+    carrinho_item = get_object_or_404(Carrinho, utilizador_id=v_utilizador_id, equipamento_id=p_equipamento_id)
 
-#     # Check if the quantity is more than 1, decrease it; otherwise, remove the item
-#     if carrinho_item.quantidade > 1:
-#         carrinho_item.quantidade -= 1
-#         carrinho_item.save()
-#     else:
-#         carrinho_item.delete()
+    # Check if the quantity is more than 1, decrease it; otherwise, remove the item
+    if carrinho_item.quantidade > 1:
+        carrinho_item.quantidade -= 1
+        carrinho_item.save()
+    else:
+        carrinho_item.delete()
 
-#     return redirect('carrinho')
+    return redirect('carrinho')
 
-def comprar(request, item_id):
-    # Inserir compra nas vendas associada ao utilizador
-    
-    
+def limpar_carrinho(request):
+    token_string = request.COOKIES.get('loginToken')
 
+    # Remove leading and trailing square brackets
+    cleaned_string = token_string.strip('[()]')
 
-    return None
+    # Split the string using the comma as a delimiter
+    values = cleaned_string.split(',')
 
+    # Convert the string value to an integer
+    v_utilizador_id = int(values[0])
+
+    # Remove all items from the cart
+    Carrinho.objects.filter(utilizador_id=v_utilizador_id).delete()
+
+    return redirect('carrinho')
 
 
 
 def create_encomenda(request):
-    try:
-        # Assuming you have the user ID in the session or request
-        utilizador_id = request.session['user_id']
+    # Assuming you have the user ID in the session or request
+    if request.method == 'POST':
+        token_string = request.COOKIES.get('loginToken')
 
-        # Retrieve items from the Carrinho for the user
-        carrinho_items = Carrinho.objects.filter(utilizador_id=utilizador_id)
+    # Remove leading and trailing square brackets
+        cleaned_string = token_string.strip('[()]')
 
-        with transaction.atomic():
-            # Create an EncomendaCliente for each item in Carrinho
+    # Split the string using the comma as a delimiter
+        values = cleaned_string.split(',')
+
+    # Convert the string value to an integer
+        utilizador_id = int(values[0])
+        
+        with connections['postgres'].cursor() as cursor:
+            cursor.callproc('get_user_by_id', [utilizador_id])
+            utilizador = cursor.fetchone()
+            # Retrieve items from the Carrinho for the user
+            carrinho_items = Carrinho.objects.filter(utilizador_id=utilizador_id)
+            #TODO: buscar equipamento by id, fazer HTML de finalizar compra
             for carrinho_item in carrinho_items:
-                encomenda = EncomendaCliente.objects.create(
-                    equipamento_id=carrinho_item.equipamento_id,
-                    preco_enc_c=0,  # Set the appropriate price
-                    morada_armazem="Sample Armazem",
-                    morada_cliente="Sample Morada Cliente",
-                    quantidade=carrinho_item.quantidade,
-                    # data_encomenda_cliente=timezone.now(),
-                    nome_artigo="Sample Artigo",
-                    telemovel_cliente="Sample Telemovel",
-                    metodo_pagamento="Sample Metodo Pagamento",
-                    estado="Pendente",  # Set the appropriate state
-                    cliente_id=utilizador_id
-                )
-
+                    cursor.callproc('get_equipamento_by_id', [carrinho_item.equipamento_id])
+                    equipamento = cursor.fetchone()
+                    cursor.execute("""
+                        CALL insert_into_encomendacliente(
+                            %s::double precision, %s::character varying, %s::character varying,
+                            %s::integer, %s::character varying, %s::character varying,
+                            %s::character varying, %s::character varying, %s::integer, %s::integer
+                        )
+                    """, [
+                        equipamento[1],#Preco equip
+                        'Armazém XPTO',#morada armazem
+                        request.POST['morada_encomenda'],#morada cliente
+                        carrinho_item.quantidade,#qt item no carrinho
+                        equipamento[8],#name artigo
+                        utilizador[4],#phone cliente
+                        request.POST['metodo_pagamento'],#meter na página
+                        'Processamento',
+                        utilizador_id,
+                        carrinho_item.equipamento_id
+                    ])
             # Clear the user's Carrinho after creating Encomendas
-            carrinho_items.delete()
-
-        return render(request, 'success_template.html', {'message': 'Encomenda criada com sucesso!'})
-
-    except Exception as e:
-        return render(request, 'error_template.html', {'error': str(e)})
+        carrinho_items.delete()
+        return render(request, 'cliente/success_template.html', {'message': 'Encomenda criada com sucesso!'})
+    return render(request,'cliente/finalizar_compra.html')
     
 
 # tipo de utilizadores

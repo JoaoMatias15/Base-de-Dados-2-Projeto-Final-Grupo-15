@@ -1,0 +1,17 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container">
+    <h1>Inserir Tipo de Equipamento</h1>
+    <form method="post" action="{% url 'inserir_tipo_equipamento' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="designacao_tipo_equipamento">Designação do Tipo de Equipamento</label>
+            <input type="text" class="form-control" id="designacao_tipo_equipamento" name="designacao_tipo_equipamento" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Inserir Tipo de Equipamento</button>
+    </form>
+  </div>
+  <a href="{% url 'listar_tipo_equipamentos' %}" class="btn btn-secondary">Voltar para a lista de Tipo de Equipamento</a>
+{% endblock %}

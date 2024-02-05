@@ -47,7 +47,7 @@ class Componente(models.Model):
 #     estado = models.CharField(max_length=256, null=True)
 class EncomendaCliente(models.Model):
     id_encomenda_cliente = models.IntegerField(primary_key=True)
-    equipamento_id = models.IntegerField()
+    equipamento_id =  models.ForeignKey('Equipamento', on_delete=models.SET_NULL, null=True)
 
 
     preco_enc_c = models.FloatField()
@@ -67,7 +67,6 @@ class EncomendaCliente(models.Model):
 
 class EncomendaComponente(models.Model):
     id_encomenda_componente = models.AutoField(primary_key=True)
-    encomenda = models.ForeignKey('EncomendaCliente', on_delete=models.SET_NULL, null=True)
     componente = models.ForeignKey('Componente', on_delete=models.SET_NULL, null=True)
 
 class Equipamento(models.Model):
@@ -83,6 +82,9 @@ class Equipamento(models.Model):
     caracteristicas_equip = models.CharField(max_length=256, null=True)
     margem_lucro_equip = models.IntegerField(null=True)
     stock_min_equip = models.IntegerField()
+    imagem_equip = models.ImageField(upload_to='images/', null=True, blank=True)
+    
+
     
     
 
