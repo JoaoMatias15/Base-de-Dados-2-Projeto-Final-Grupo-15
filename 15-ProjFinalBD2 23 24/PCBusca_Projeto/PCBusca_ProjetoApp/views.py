@@ -619,7 +619,7 @@ def insert_equipamento(request):
         tipo_equipamento_id = int(request.POST['tipo_equipamento_id'])
         imagem_equip = request.FILES['imagem_equip'] if 'imagem_equip' in request.FILES else None
         print('--------------------------------------------------------------------------------------------------------------------------')
-        print('Bomdia crl')
+        print('Bomdia')
         print(imagem_equip)
         print('--------------------------------------------------------------------------------------------------------------------------')
         image_path = None
