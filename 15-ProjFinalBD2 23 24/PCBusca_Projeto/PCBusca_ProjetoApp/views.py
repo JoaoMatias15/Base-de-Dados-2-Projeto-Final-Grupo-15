@@ -18,6 +18,7 @@ from .filters import EquipamentoFilter
 from .forms import CreateUserForm,AuthForm,UtilizadorForm,UtilizadorForm2,FornecedorForm,ComponenteForm
 from .models import Utilizador
 from .models import Equipamento
+from django.conf import settings
 
 # from .models import Produtos
 # from .filters import ProdutosFilter
