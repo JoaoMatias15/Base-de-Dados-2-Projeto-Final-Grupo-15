@@ -41,10 +41,10 @@
           <td>{{ encomenda.11|get_equipamento_name }}</td>
           <td>
             <a href="{% url 'editar_encomendacliente' encomenda.0 %}" class="btn btn-primary">Edit</a>
-            <form action="{% url 'apagar_encomendacliente' encomenda.0 %}" method="post" style="display: inline;">
+            {% comment %} <form action="{% url 'apagar_encomendacliente' encomenda.0 %}" method="post" style="display: inline;">
               {% csrf_token %}
               <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
+            </form> {% endcomment %}
           </td>
         </tr>
         {% endfor %}

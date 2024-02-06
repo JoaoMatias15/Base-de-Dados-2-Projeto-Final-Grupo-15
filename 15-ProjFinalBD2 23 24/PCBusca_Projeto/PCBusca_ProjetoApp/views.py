@@ -42,6 +42,12 @@ def checkPermissions(id):
             return 'postgres'
         else:
             return redirect('index', messages.warning('Não tens permissões para aceder a esta página!'))
+        
+def logout(request):
+    # Delete the loginToken cookie
+    response = redirect('login')  # Redirect to login page
+    response.delete_cookie('loginToken')
+    return response
 
 
 def registerPage(request):

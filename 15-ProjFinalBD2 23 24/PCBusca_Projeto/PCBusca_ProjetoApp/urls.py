@@ -62,6 +62,7 @@ urlpatterns = [
     path('admin/listar_encomendascliente', views.list_encomenda_cliente, name='listar_encomendascliente'),
     path('admin/editar_encomendacliente/<int:id>/', views.edit_encomenda_cliente, name='editar_encomendacliente'),
     path('admin/apagar_encomendacliente/<int:id>/', views.delete_encomenda_cliente, name='apagar_encomendacliente'),
+    path('logout/', views.logout, name='logout'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

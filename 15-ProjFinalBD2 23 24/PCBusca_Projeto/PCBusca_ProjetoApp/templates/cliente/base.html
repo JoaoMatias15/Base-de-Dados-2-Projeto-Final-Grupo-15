@@ -24,9 +24,15 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'minhasencomendas' %}">MinhasEncomendas</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
-          </li>
+          {% if request.COOKIES.loginToken %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+      {% endif %}
         </ul>
         <div class="ml-auto">
           <a href="{% url 'carrinho' %}" class="shopping-cart-icon">
