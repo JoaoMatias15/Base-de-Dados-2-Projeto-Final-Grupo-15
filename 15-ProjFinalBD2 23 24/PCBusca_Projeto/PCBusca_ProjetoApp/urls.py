@@ -53,6 +53,8 @@ urlpatterns = [
     path('admin/inserir_funcionario/', views.insert_funcionario, name='inserir_funcionario'),
     path('admin/editar_funcionario/<int:id>/', views.editar_funcionario, name='editar_funcionario'),
     path('admin/apagar_funcionario/<int:id>/', views.apagar_funcionario, name='apagar_funcionario'),
+    path('minhasencomendas', views.get_encomendas, name='minhasencomendas'),
+    path('admin/insert_bulk_componente/', views.insert_bulk_componente, name='insert_bulk_componente'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

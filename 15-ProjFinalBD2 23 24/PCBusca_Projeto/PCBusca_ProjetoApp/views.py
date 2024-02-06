@@ -31,6 +31,19 @@ from django.shortcuts import render,get_object_or_404, redirect
 from .models import Carrinho
 	
 
+def checkPermissions(id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_tipo_desc_user_id', [id])
+        tipouser = cursor.fetchone()
+    if tipouser[0] == 'Cliente':
+        return 'Cliente'
+    else:
+        if tipouser[0] == 'Administrador':
+            return 'postgres'
+        else:
+            return redirect('index', messages.warning('Não tens permissões para aceder a esta página!'))
+
+
 def registerPage(request):
     context = {}
     if request.method=='POST':
@@ -302,32 +315,25 @@ def update_utilizador(request, id):
     if request.method == 'POST':
         # Get form data
         nome = request.POST['nome']
-        morada = request.POST['morada']
+        morada = request.POST['morada_utilizador']
         email = request.POST['email']
         telemovel = request.POST['telemovel']
-        nif = request.POST['nif']
-        estado = request.POST['estado']
+        nif = request.POST['NIF']
         tipo_utilizador_id = request.POST['tipo_utilizador_id']
 
         # Call procedure to update 'utilizador'
         with connections['postgres'].cursor() as cursor:
             cursor.execute("""
-            CALL update_utilizador(
+            CALL update_user(
                 %s::integer, %s::varchar, %s::varchar, %s::varchar,
-                %s::integer, %s::boolean, %s::integer
+                %s::integer,  %s::integer,%s::integer
             )"""
-            ,[id, nome, morada, email, telemovel, nif, estado, tipo_utilizador_id])
+            ,[id, morada, nome, email, telemovel, nif,  tipo_utilizador_id])
 
         return redirect('listar_utilizadores')
 
-    return render(request, 'admin/editar_utilizador.html', {'utilizador': utilizador, 'tipos_utilizadores': tipos_utilizadores})
+    return render(request, 'admin/editar_utilizador.html', {'user': utilizador, 'tipos_utilizadores': tipos_utilizadores})
 
-def apagar_utilizador(request, id):
-    utilizador = Utilizador.objects.get(id=id)
-    if request.method == 'POST':
-        utilizador.delete()
-        messages.success(request, f'Utilizador {utilizador.nome} foi excluido com sucesso!')
-    return redirect('listar_utilizadores')
 
 
 
@@ -966,7 +972,9 @@ def adicionar_ao_carrinho(request, p_equipamento_id):
     with connections['postgres'].cursor() as cursor:
         cursor.callproc('get_equipamento_by_id', [p_equipamento_id])
         equipamento = cursor.fetchone()
-
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    print(equipamento)
+    print('--------------------------------------------------------------------------------------------------------------------------')
     # Check if adding the new quantity exceeds the available stock
     
 
@@ -1043,7 +1051,7 @@ def create_encomenda(request):
     # Convert the string value to an integer
         utilizador_id = int(values[0])
         
-        with connections['postgres'].cursor() as cursor:
+        with connections[checkPermissions(utilizador_id)].cursor() as cursor:
             cursor.callproc('get_user_by_id', [utilizador_id])
             utilizador = cursor.fetchone()
             # Retrieve items from the Carrinho for the user
@@ -1215,3 +1223,38 @@ def apagar_funcionario(request, id):
 
     return redirect('listar_funcionario')
 
+
+#Minhas encomendas
+
+def get_encomendas(request):
+    token_string = request.COOKIES.get('loginToken')
+
+    # Remove leading and trailing square brackets
+    cleaned_string = token_string.strip('[()]')
+
+    # Split the string using the comma as a delimiter
+    values = cleaned_string.split(',')
+
+    # Convert the string value to an integer
+    v_utilizador_id = int(values[0])
+
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_encomenda_by_cliente_id', [v_utilizador_id])
+        encomendas = cursor.fetchall()
+
+    return render(request, 'cliente/listar_encomendas.html', {'encomendas': encomendas})
+
+
+#bulk insert
+def insert_bulk_componente(request):
+    if request.method == 'POST':
+        # Get the JSON data from the submitted form
+        json_data = request.POST.get('json_data')
+
+        # Call the stored procedure to insert bulk data
+        with connections['postgres'].cursor() as cursor:
+            cursor.callproc('insert_bulk_componente', [json_data])
+
+        return render(request, 'admin/insert_bulk_componente.html',{'message': 'Componentes inseridos com sucesso!'})
+
+    return render(request, 'admin/insert_bulk_componente.html')
