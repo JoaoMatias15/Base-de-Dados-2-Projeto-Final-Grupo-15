@@ -619,7 +619,8 @@ def insert_equipamento(request):
         tipo_equipamento_id = int(request.POST['tipo_equipamento_id'])
         imagem_equip = request.FILES['imagem_equip'] if 'imagem_equip' in request.FILES else None
         print('--------------------------------------------------------------------------------------------------------------------------')
-        print('Bomdia crl')
+        print('Bomdia')
+        # print(settings.STATIC_ROOT)
         print(imagem_equip)
         print('--------------------------------------------------------------------------------------------------------------------------')
         image_path = None
@@ -1215,3 +1216,21 @@ def apagar_funcionario(request, id):
 
     return redirect('listar_funcionario')
 
+# Guia de remessa
+
+def get_guias(request):
+    try:
+        with connections['postgres'].cursor() as cursor:
+            cursor.callproc('get_guias_de_remessa_data')
+            guias = cursor.fetchall()
+    except Exception as e:
+        return HttpResponseForbidden("Você não tem permissão para acessar esses dados.")
+
+    return render(request, 'admin/listar_guias_de_remessa.html', {'guias': guias})
+
+def apagar_guia(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("CALL delete_guia_de_remessa(%s)", [id])
+
+    return redirect('listar_guia_de_remessa')

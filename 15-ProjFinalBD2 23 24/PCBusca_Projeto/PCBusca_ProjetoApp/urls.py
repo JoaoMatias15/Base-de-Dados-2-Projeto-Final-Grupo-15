@@ -53,6 +53,8 @@ urlpatterns = [
     path('admin/inserir_funcionario/', views.insert_funcionario, name='inserir_funcionario'),
     path('admin/editar_funcionario/<int:id>/', views.editar_funcionario, name='editar_funcionario'),
     path('admin/apagar_funcionario/<int:id>/', views.apagar_funcionario, name='apagar_funcionario'),
+    path('admin/listar_guia_de_remessa/', views.get_guias, name='listar_guia_de_remessa'),
+    path('admin/apagar_guia_de_remessa/<int:id>/', views.get_guias, name='apagar_guia_de_remessa'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

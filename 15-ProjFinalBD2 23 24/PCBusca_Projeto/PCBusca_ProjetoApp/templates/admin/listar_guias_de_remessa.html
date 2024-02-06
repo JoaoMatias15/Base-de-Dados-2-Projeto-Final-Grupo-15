@@ -1,0 +1,61 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Listar Guias de Remessa</h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID Guia</th>
+        <th>Destinatário</th>
+        <th>NIF Destinatário</th>
+        <th>Data de Saída</th>
+        <th>Nome do Produto</th>
+        <th>Quantidade</th>
+        <th>Peso</th>
+        <th>Encomenda ID</th>
+        <th>Fornecedor ID</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for guia in guias %}
+        <tr>
+          <td>{{ guia.0 }}</td>
+          <td>{{ guia.1 }}</td>
+          <td>{{ guia.2 }}</td>
+          <td>{{ guia.3 }}</td>
+          <td>{{ guia.4 }}</td>
+          <td>{{ guia.5 }}</td>
+          <td>{{ guia.6 }}</td>
+          <td>{{ guia.7 }}</td>
+          <td>{{ guia.8 }}</td>
+          <td>
+            {% if guia.0 %}
+              <a href="{% url 'detalhes_guia' guia.0 %}" class="btn btn-primary">Detalhes</a>
+              <form id="removerGuiaForm{{ guia.0 }}" method="post" action="{% url 'apagar_guia_de_remessa' guia.0 %}">
+                {% csrf_token %}
+                <button type="button" class="btn btn-danger" onclick="confirmRemovalGuia('{{ guia.0 }}')">
+                  Apagar
+                </button>
+              </form>
+            {% else %}
+              <p>ID indisponível</p>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- JavaScript for confirmation -->
+  <script>
+    function confirmRemovalGuia(id) {
+      var confirmation = confirm("Tem certeza que deseja remover?");
+      if (confirmation) {
+        document.getElementById('removerGuiaForm' + id).submit();
+      }
+    }
+  </script>
+{% endblock %}

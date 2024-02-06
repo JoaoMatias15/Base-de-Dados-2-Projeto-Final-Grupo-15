@@ -1,0 +1,16 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Apagar Guia de Remessa</h2>
+
+  <div class="container">
+    <p>Tem certeza que deseja apagar a Guia de Remessa ID {{ guia.0 }}?</p>
+    <form method="post" action="{% url 'apagar_guia_de_remessa' guia.0 %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Sim, Apagar</button>
+      <a href="{% url 'listar_guia_de_remessa' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+
+{% endblock %}
