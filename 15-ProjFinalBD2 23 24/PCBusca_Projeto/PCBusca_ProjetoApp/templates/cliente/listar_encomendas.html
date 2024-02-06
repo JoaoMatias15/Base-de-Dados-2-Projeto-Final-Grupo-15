@@ -1,0 +1,28 @@
+{% extends 'cliente/base.html' %}
+{% block content %}
+<h1>List of Encomendas</h1>
+
+{% if encomendas %}
+    <ul>
+        {% for encomenda in encomendas %}
+            <li>
+                <strong>Referencia Item:</strong> {{ encomenda.0 }}<br>
+                <strong>Preço Enc C:</strong> {{ encomenda.1 }}<br>
+                <strong>Morada Armazem:</strong> {{ encomenda.2 }}<br>
+                <strong>Morada Cliente:</strong> {{ encomenda.3 }}<br>
+                <strong>Quantidade:</strong> {{ encomenda.4 }}<br>
+                <strong>Data Encomenda Cliente:</strong> {{ encomenda.5 }}<br>
+                <strong>Nome Artigo:</strong> {{ encomenda.6 }}<br>
+                <strong>Telemovel Cliente:</strong> {{ encomenda.7 }}<br>
+                <strong>Método Pagamento:</strong> {{ encomenda.8 }}<br>
+                <strong>Estado:</strong> {{ encomenda.9 }}<br>
+                <strong>Cliente ID:</strong> {{ encomenda.10 }}<br>
+                <strong>Equipamento ID:</strong> {{ encomenda.11 }}<br>
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No encomendas found.</p>
+{% endif %}
+{% endblock %}

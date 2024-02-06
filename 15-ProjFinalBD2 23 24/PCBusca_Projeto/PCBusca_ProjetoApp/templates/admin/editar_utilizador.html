@@ -29,7 +29,7 @@
         <div class="form-group">
             <label for="tipo_utilizador_id">Tipo Utilizador</label>
             <select class="form-control" id="tipo_utilizador_id" name="tipo_utilizador_id" required>
-                {% for tipo_utilizador in tipo_utilizadores %}
+                {% for tipo_utilizador in tipos_utilizadores %}
                     <option value="{{ tipo_utilizador.0 }}">{{ tipo_utilizador.1 }}</option>
                 {% endfor %}
             </select>

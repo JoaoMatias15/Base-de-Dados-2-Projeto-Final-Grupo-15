@@ -1,0 +1,24 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+  <div class="container">
+    <h1>Insert Bulk Componente</h1>
+    <form method="post">
+      {% csrf_token %}
+      <div class="row">
+        {% if message %}
+      <div class="alert alert-success" role="alert" id="success-alert">
+        {{ message }}
+      </div>
+      {% endif %}
+      <div class="form-group">
+        <label for="json_data">JSON Data</label>
+        <textarea class="form-control" id="json_data" name="json_data" rows="5" required></textarea>
+      </div>
+      <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-sm">Insert Data</button>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}

@@ -32,24 +32,10 @@ class Componente(models.Model):
     margem_lucro = models.FloatField(null=True)
     stock_min = models.IntegerField(null=True)
 
-# class EncomendaCliente(models.Model):
-#     id_encomenda_cliente = models.AutoField(primary_key=True)
-#     cliente = models.ForeignKey('Utilizador', on_delete=models.SET_NULL, null=True)
-#     equipamento = models.ForeignKey('Equipamento', on_delete=models.SET_NULL, null=True)
-#     preco_enc_c = models.FloatField(null=True)
-#     morada_armazem = models.CharField(max_length=256, null=True)
-#     morada_cliente = models.CharField(max_length=256, null=True)
-#     quantidade = models.IntegerField(null=True)
-#     data_encomenda_cliente = models.DateTimeField(null=True)
-#     nome_artigo = models.CharField(max_length=256, null=True)
-#     telemovel_cliente = models.CharField(max_length=256, null=True)
-#     metodo_pagamento = models.CharField(max_length=256, null=True)
-#     estado = models.CharField(max_length=256, null=True)
+
 class EncomendaCliente(models.Model):
     id_encomenda_cliente = models.IntegerField(primary_key=True)
     equipamento_id =  models.ForeignKey('Equipamento', on_delete=models.SET_NULL, null=True)
-
-
     preco_enc_c = models.FloatField()
     morada_armazem = models.CharField(max_length=256)
     morada_cliente = models.CharField(max_length=256)
@@ -73,9 +59,6 @@ class Equipamento(models.Model):
     id_equipamento = models.AutoField(primary_key=True)
     nome_equipamento = models.CharField(max_length=256, null=True)
     tipo_equipamento = models.ForeignKey('TipoDeEquipamento', on_delete=models.SET_NULL, null=True)
-    #componente = models.ForeignKey('Componente', on_delete=models.SET_NULL, null=True)
-    #producao = models.ForeignKey('Producao', on_delete=models.SET_NULL, null=True, related_name='equipamentos')
-    # producao = models.ForeignKey('Producao', on_delete=models.SET_NULL, null=True)
     preco_equipamento = models.FloatField()
     preco_de_producao = models.FloatField()
     stock_equip = models.IntegerField()
@@ -118,7 +101,7 @@ class Funcionarios(models.Model):
 
 class GuiaDeRemessa(models.Model):
     id_guia_de_remessa = models.AutoField(primary_key=True)
-    encomenda = models.ForeignKey('EncomendaCliente', on_delete=models.SET_NULL, null=True)
+    encomenda = models.ForeignKey('EncomendaComponente', on_delete=models.SET_NULL, null=True)
     fornecedor = models.ForeignKey('Fornecedor', on_delete=models.SET_NULL, null=True)
     destinatario = models.CharField(max_length=256, null=True)
     nif_destinatario = models.IntegerField(null=True)

@@ -5,6 +5,11 @@
 {% block content %}
 <div class="container">
   <div class="row">
+    {% if message %}
+  <div class="alert alert-danger" role="alert" id="success-alert">
+    {{ message }}
+  </div>
+{% endif %}
     {% for product in equipamentos %}
     
       <div class="col-md-4">
@@ -29,11 +34,7 @@
   </div>
 </div>
 
-{% if message %}
-  <div class="alert alert-success" role="alert" id="success-alert">
-    {{ message }}
-  </div>
-{% endif %}
+
 {% endblock %}
 
 {% block scripts %}

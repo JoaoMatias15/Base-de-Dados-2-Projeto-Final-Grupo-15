@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'PCBusca_ProjetoApp.middleware.TokenMiddleware',
+    'PCBusca_ProjetoApp.middleware.AdminCheckMiddleware',
 ]
 
 ROOT_URLCONF = 'PCBusca_ProjetoF.urls'
@@ -90,40 +91,17 @@ DATABASES = {
         'PASSWORD': 'bd2pass123',
         'HOST': 'localhost',
     },
-    # 'Cliente': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'BD2_G15_Database',
-    #     'USER': 'Cliente',
-    #     'PASSWORD': 'bd2pass123',
-    #     'HOST': 'localhost',
-    # },
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'BD2_G15_Database',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'bd2pass123',
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',
-    # },
-    # 'mongodb': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'BD2_G15_Database_Mongo',
-    #     'ENFORCE_SCHEMA': False,
-
-    # },
+    'Cliente': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'BD2_G15_Database',
+        'USER': 'Cliente',
+        'PASSWORD': 'bd2pass123',
+        'HOST': 'localhost',
+    },
+  
 }
 
-    # 'default': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'BD2_G15_Database_Mongo',
-    # },
-    # 'postgres': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'BD2_G15_Database',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'bd2pass123',
-    #     'HOST': 'localhost',
-    # },
+ 
    
 
 # Password validation

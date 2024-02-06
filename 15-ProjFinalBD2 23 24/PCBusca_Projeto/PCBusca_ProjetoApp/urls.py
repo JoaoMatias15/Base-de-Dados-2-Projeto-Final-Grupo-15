@@ -53,6 +53,8 @@ urlpatterns = [
     path('admin/inserir_funcionario/', views.insert_funcionario, name='inserir_funcionario'),
     path('admin/editar_funcionario/<int:id>/', views.editar_funcionario, name='editar_funcionario'),
     path('admin/apagar_funcionario/<int:id>/', views.apagar_funcionario, name='apagar_funcionario'),
+    path('minhasencomendas', views.get_encomendas, name='minhasencomendas'),
+    path('admin/insert_bulk_componente/', views.insert_bulk_componente, name='insert_bulk_componente'),
     path('admin/listar_guia_de_remessa/', views.get_guias, name='listar_guia_de_remessa'),
     path('admin/apagar_guia_de_remessa/<int:id>/', views.get_guias, name='apagar_guia_de_remessa'),
 ]
