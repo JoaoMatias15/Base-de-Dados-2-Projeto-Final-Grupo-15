@@ -1,0 +1,47 @@
+<!-- edit_encomenda_cliente.html -->
+
+{% extends "admin/base_admin.html" %}
+{% block content %}
+  <div class="container">
+    <h1>Edit Encomenda Cliente</h1>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="preco_enc_c">Preço Enc C</label>
+        <input type="number" class="form-control" id="preco_enc_c" name="preco_enc_c" value="{{ encomenda.1 }}" required>
+      </div>
+      <div class="form-group">
+        <label for="morada_armazem">Morada Armazém</label>
+        <input type="text" class="form-control" id="morada_armazem" name="morada_armazem" value="{{ encomenda.2 }}" required>
+      </div>
+      <div class="form-group">
+        <label for="morada_cliente">Morada Cliente</label>
+        <input type="text" class="form-control" id="morada_cliente" name="morada_cliente" value="{{ encomenda.3 }}" required>
+      </div>
+      <div class="form-group">
+        <label for="quantidade">Quantidade</label>
+        <input type="number" class="form-control" id="quantidade" name="quantidade" value="{{ encomenda.4 }}" required>
+      </div>
+      <div class="form-group">
+        <label for="nome_artigo">Nome Artigo</label>
+        <input type="text" class="form-control" id="nome_artigo" name="nome_artigo" value="{{ encomenda.6 }}" required>
+      </div>
+      <div class="form-group">
+        <label for="telemovel_cliente">Telemovel Cliente</label>
+        <input type="text" class="form-control" id="telemovel_cliente" name="telemovel_cliente" value="{{ encomenda.7 }}" required>
+      </div>
+      <div class="form-group">
+        <label for="metodo_pagamento">Metodo Pagamento</label>
+        <input type="text" class="form-control" id="metodo_pagamento" name="metodo_pagamento" value="{{ encomenda.8 }}" required>
+      </div>
+      <div class="form-group">
+        <label for="estado">Estado</label>
+        <input type="text" class="form-control" id="estado" name="estado" value="{{ encomenda.9 }}" required>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+
+  
+{% endblock %}

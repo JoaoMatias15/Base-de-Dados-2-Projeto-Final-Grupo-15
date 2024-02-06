@@ -33,7 +33,6 @@
           <td>{{ guia.8 }}</td>
           <td>
             {% if guia.0 %}
-              <a href="{% url 'detalhes_guia' guia.0 %}" class="btn btn-primary">Detalhes</a>
               <form id="removerGuiaForm{{ guia.0 }}" method="post" action="{% url 'apagar_guia_de_remessa' guia.0 %}">
                 {% csrf_token %}
                 <button type="button" class="btn btn-danger" onclick="confirmRemovalGuia('{{ guia.0 }}')">

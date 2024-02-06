@@ -55,3 +55,18 @@ def get_tipo_equipamento_name(tipo_equipamento_id):
     except TipoDeEquipamento.DoesNotExist:
         return 'Tipo Equipamento not found'
     
+@register.filter(name='get_equipamento_name')
+def get_equipamento_name(equipamento_id):
+    try:
+        with connections['postgres'].cursor() as cursor:
+            cursor.callproc('get_equipamento_by_id', [equipamento_id])
+            equipamento = cursor.fetchone()
+            print('--------------------------------------------------------------------------------------------------------------------')
+            print(equipamento)
+            print('--------------------------------------------------------------------------------------------------------------------')
+            if equipamento:
+                return equipamento[8] 
+            else:
+                return 'Equipamento not found'
+    except TipoDeEquipamento.DoesNotExist:
+        return 'Equipamento not found'    

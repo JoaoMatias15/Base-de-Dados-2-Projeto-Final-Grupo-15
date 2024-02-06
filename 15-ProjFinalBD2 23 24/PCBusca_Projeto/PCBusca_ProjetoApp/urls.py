@@ -57,6 +57,11 @@ urlpatterns = [
     path('admin/insert_bulk_componente/', views.insert_bulk_componente, name='insert_bulk_componente'),
     path('admin/listar_guia_de_remessa/', views.get_guias, name='listar_guia_de_remessa'),
     path('admin/apagar_guia_de_remessa/<int:id>/', views.get_guias, name='apagar_guia_de_remessa'),
+    path('admin/inserir_guia_de_remessa/', views.insert_guia_de_remessa, name='inserir_guia_de_remessa'),
+    path('admin/guiaderemessa/', views.guiaderemessa_list, name='guiaderemessa_list'),
+    path('admin/listar_encomendascliente', views.list_encomenda_cliente, name='listar_encomendascliente'),
+    path('admin/editar_encomendacliente/<int:id>/', views.edit_encomenda_cliente, name='editar_encomendacliente'),
+    path('admin/apagar_encomendacliente/<int:id>/', views.delete_encomenda_cliente, name='apagar_encomendacliente'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

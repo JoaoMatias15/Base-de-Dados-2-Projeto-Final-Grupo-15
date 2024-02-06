@@ -19,7 +19,7 @@ from .forms import CreateUserForm,AuthForm,UtilizadorForm,UtilizadorForm2,Fornec
 from .models import Utilizador
 from .models import Equipamento
 from django.conf import settings
-
+from django.http import JsonResponse
 # from .models import Produtos
 # from .filters import ProdutosFilter
 # from .forms import UtilizadorForm
@@ -1278,3 +1278,128 @@ def apagar_guia(request, id):
             cursor.execute("CALL delete_guia_de_remessa(%s)", [id])
 
     return redirect('listar_guia_de_remessa')
+
+def inserir_guia(request):
+    if request.method == 'POST':
+        # Obter dados do formulário
+        data_guia = request.POST['data_guia']
+        morada_origem = request.POST['morada_origem']
+        morada_destino = request.POST['morada_destino']
+        equipamento_id = int(request.POST['equipamento_id'])
+        quantidade = int(request.POST['quantidade'])
+
+        # Chamar procedimento para inserir guia
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute(
+                "CALL insert_into_guia_de_remessa(%s::date, %s::varchar, %s::varchar, %s::integer, %s::integer)",
+                [data_guia, morada_origem, morada_destino, equipamento_id, quantidade]
+            )
+
+        return redirect('listar_guia_de_remessa')
+
+    # Obter dados necessários para dropdowns (equipamentos)
+
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_equipamentos_data')
+        equipamentos = cursor.fetchall()
+
+    return render(request, 'admin/insert_guia_de_remessa.html', {'equipamentos': equipamentos})
+
+def insert_guia_de_remessa(request):
+    with connections['postgres'].cursor() as cursor:       
+        cursor.callproc('get_fornecedores_data')
+        fornecedores = cursor.fetchall()
+    if request.method == 'POST':
+        form_data = {
+            'destinatario': request.POST['destinatario'],
+            'nif_destinatario': int(request.POST['nif_destinatario']),
+            'data_saida_forn': request.POST['data_saida_forn'],
+            'nome_produto': request.POST['nome_produto'],
+            'quantidade_produto': int(request.POST['quantidade_produto']),
+            'peso_produto': float(request.POST['peso_produto']),
+            'encomenda_id': int(request.POST['encomenda_id']),
+            'fornecedor_id': int(request.POST['fornecedor_id']),
+        }
+
+        # Call the PostgreSQL stored procedure
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("""
+                CALL insert_guia_de_remessa(
+                    %s::varchar, %s::int, %s::timestamp, %s::varchar, %s::int, %s::float8, %s::int, %s::int
+                )
+            """, [
+                form_data['destinatario'],
+                form_data['nif_destinatario'],
+                form_data['data_saida_forn'],
+                form_data['nome_produto'],
+                form_data['quantidade_produto'],
+                form_data['peso_produto'],
+                form_data['encomenda_id'],
+                form_data['fornecedor_id'],
+            ])
+
+    return render(request, 'admin/insert_guida_de_remessa.html', {'fornecedores': fornecedores})
+
+
+def guiaderemessa_list(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc("get_all_guias_de_remessa")
+        result = cursor.fetchone()
+
+    # result is a tuple, and the JSON data is in the first element
+    json_data = result[0]
+
+    return render(request, 'admin/export_remessa.html', {'json_data': json_data})
+
+
+def list_encomenda_cliente(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('list_encomenda_cliente')
+        encomendas = cursor.fetchall()
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    print(encomendas)
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    return render(request, 'admin/listar_enc_cliente.html', {'encomendas': encomendas})
+
+def edit_encomenda_cliente(request, id):
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_encomenda_cliente_by_id', [id])
+        encomenda = cursor.fetchone()
+
+    if request.method == 'POST':
+        # Extract data from form
+        preco_enc_c = request.POST['preco_enc_c']
+        morada_armazem = request.POST['morada_armazem']
+        morada_cliente = request.POST['morada_cliente']
+        quantidade = request.POST['quantidade']
+        
+        nome_artigo = request.POST['nome_artigo']
+        telemovel_cliente = request.POST['telemovel_cliente']
+        metodo_pagamento = request.POST['metodo_pagamento']
+        estado = request.POST['estado']
+
+        # Print SQL query for debugging
+        print(
+            "CALL update_encomenda_cliente(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            [id, preco_enc_c, morada_armazem, morada_cliente, quantidade, nome_artigo,
+             telemovel_cliente, metodo_pagamento, estado]
+        )
+
+        # Call stored procedure to update encomenda cliente
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute(
+            "SELECT update_encomenda_cliente(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            [id, preco_enc_c, morada_armazem, morada_cliente, quantidade, nome_artigo,
+            telemovel_cliente, metodo_pagamento, estado]
+            )
+
+        return redirect('listar_encomendascliente')
+
+    return render(request, 'admin/edit_encomenda_cliente.html', {'encomenda': encomenda})
+
+def delete_encomenda_cliente(request, id):
+    if request.method == 'POST':
+        with connections['postgres'].cursor() as cursor:
+            cursor.execute("SELECT delete_encomenda_cliente(%s)", [id])
+
+    return redirect('listar_encomendascliente')
