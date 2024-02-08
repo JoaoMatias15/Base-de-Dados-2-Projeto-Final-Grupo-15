@@ -18,16 +18,16 @@
           <td>{{ tipo_mao_de_obra.1 }}</td>
           <td>
             {% if tipo_mao_de_obra.0 %}
-              <a href="{% url 'editar_tipo_mao_de_obra' tipo_mao_de_obra.0 %}" class="btn btn-primary">Editar</a>
-              <form id="removerForm{{ tipo_mao_de_obra.0 }}" method="post" action="{% url 'apagar_tipo_mao_de_obra' tipo_mao_de_obra.0 %}">
-                {% csrf_token %}
-                <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ tipo_mao_de_obra.0 }}')">
-                  Apagar
-                </button>
-              </form>
-            {% else %}
-              <p>ID indisponível</p>
-            {% endif %}
+            <a href="{% url 'editar_tipo_mao_de_obra' tipo_mao_de_obra.0 %}" class="btn btn-primary">Editar</a>
+            <form id="removerForm{{ tipo_mao_de_obra.0 }}" method="post" action="{% url 'apagar_tipo_mao_de_obra' tipo_mao_de_obra.0 %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger" onclick="confirmRemoval('{{ tipo_mao_de_obra.0 }}')">
+                Apagar
+              </button>
+            </form>
+          {% else %}
+            <p>ID indisponível</p>
+          {% endif %}
           </td>
         </tr>
       {% endfor %}
@@ -35,7 +35,8 @@
   </table>
   <script>
     function confirmRemoval(id) {
-      if (confirm("Tem certeza que deseja apagar este item?")) {
+      var confirmation = confirm("Tem certeza que deseja remover?");
+      if (confirmation) {
         document.getElementById('removerForm' + id).submit();
       }
     }

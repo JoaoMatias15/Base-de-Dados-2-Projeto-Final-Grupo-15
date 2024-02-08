@@ -13,18 +13,18 @@
         <button type="submit" class="btn btn-primary">Atualizar Tipo de Mão de Obra</button>
     </form>
 
-    <form method="post" action="{% url 'apagar_tipo_mao_de_obra' tipo_mao_de_obra.0 %}">
+    <form method="post" action="{% url 'apagar_tipo_mao_de_obra' tipo_mao_de_obra.0 %}" id="removerForm">
         {% csrf_token %}
-        <button type="button" class="btn btn-danger" onclick="confirmRemoval('{{ tipo_mao_de_obra.0 }}')">
-            Apagar Tipo de Mão de Obra
-        </button>
+        <button type="submit" name="delete_button" class="btn btn-danger" onclick="confirmRemoval('{{ tipo_mao_de_obra.0 }}')">
+          Apagar
+      </button>
     </form>
 </div>
 
 <script>
-  function confirmRemoval(id) {
+  function confirmRemoval() {
     if (confirm("Tem certeza que deseja apagar este item?")) {
-      document.getElementById('removerForm' + id).submit();
+      document.getElementById('removerForm').submit();
     }
   }
 </script>

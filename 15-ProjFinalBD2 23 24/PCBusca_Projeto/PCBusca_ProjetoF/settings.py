@@ -144,6 +144,7 @@ STATIC_FILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'PCBusca_ProjetoApp/static/images')
 
 

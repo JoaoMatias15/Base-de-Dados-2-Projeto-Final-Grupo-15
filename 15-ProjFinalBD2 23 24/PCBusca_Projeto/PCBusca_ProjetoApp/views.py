@@ -915,8 +915,11 @@ def apagar_tipo_mao_de_obra(request, id):
     if request.method == 'POST':
         with connections['postgres'].cursor() as cursor:
             cursor.execute("CALL delete_tipo_mao_de_obra(%s)", [id])
-
+    print('--------------------------------------------------------------------------------------------------------------------------')
+    print(id)
+    print('--------------------------------------------------------------------------------------------------------------------------')
     return redirect('listar_tipo_mao_de_obra')
+
 
 
 #Carrinho
