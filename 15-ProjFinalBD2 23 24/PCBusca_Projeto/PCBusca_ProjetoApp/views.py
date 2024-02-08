@@ -1279,9 +1279,9 @@ def get_guias(request):
     return render(request, 'admin/listar_guias_de_remessa.html', {'guias': guias})
 
 def apagar_guia(request, id):
-    if request.method == 'POST':
-        with connections['postgres'].cursor() as cursor:
-            cursor.execute("CALL delete_guia_de_remessa(%s)", [id])
+
+    with connections['postgres'].cursor() as cursor:
+        cursor.execute("CALL delete_guia_de_remessa(%s)", [id])
 
     return redirect('listar_guia_de_remessa')
 
@@ -1409,3 +1409,14 @@ def delete_encomenda_cliente(request, id):
             cursor.execute("SELECT delete_encomenda_cliente(%s)", [id])
 
     return redirect('listar_encomendascliente')
+
+# Fatura cliente
+
+def listar_faturas_cliente(request):
+    
+    with connections['postgres'].cursor() as cursor:
+        cursor.callproc('get_faturas_cliente_data')
+        faturas = cursor.fetchall()
+    
+
+    return render(request, 'cliente/fatura_cliente.html', {'faturas': faturas})

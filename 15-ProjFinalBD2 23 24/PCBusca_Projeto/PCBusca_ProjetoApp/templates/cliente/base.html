@@ -24,6 +24,9 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'minhasencomendas' %}">MinhasEncomendas</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'listar_fatura' %}">Minhas faturas</a>
+          </li>
           {% if request.COOKIES.loginToken %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>

@@ -56,12 +56,13 @@ urlpatterns = [
     path('minhasencomendas', views.get_encomendas, name='minhasencomendas'),
     path('admin/insert_bulk_componente/', views.insert_bulk_componente, name='insert_bulk_componente'),
     path('admin/listar_guia_de_remessa/', views.get_guias, name='listar_guia_de_remessa'),
-    path('admin/apagar_guia_de_remessa/<int:id>/', views.get_guias, name='apagar_guia_de_remessa'),
+    path('admin/apagar_guia_de_remessa/<int:id>/', views.apagar_guia, name='apagar_guia_de_remessa'),
     path('admin/inserir_guia_de_remessa/', views.insert_guia_de_remessa, name='inserir_guia_de_remessa'),
     path('admin/guiaderemessa/', views.guiaderemessa_list, name='guiaderemessa_list'),
     path('admin/listar_encomendascliente', views.list_encomenda_cliente, name='listar_encomendascliente'),
     path('admin/editar_encomendacliente/<int:id>/', views.edit_encomenda_cliente, name='editar_encomendacliente'),
     path('admin/apagar_encomendacliente/<int:id>/', views.delete_encomenda_cliente, name='apagar_encomendacliente'),
+    path('listar_fatura/', views.listar_faturas_cliente, name='listar_fatura'),
     path('logout/', views.logout, name='logout'),
 ]
 

@@ -1,0 +1,36 @@
+{% extends "cliente/base.html" %}
+{% load static %}
+
+{% block content %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID Fatura</th>
+        <th>Nif da Loja</th>
+        <th>Nome do Cliente</th>
+        <th>Nome da Loja</th>
+        <th>Artigo</th>
+        <th>Quantidade</th>
+        <th>Preço Total</th>
+        <th>Data de Emissão</th>
+        <th>Referencia Encomenda</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fatura in faturas %}
+        <tr>
+          <td>{{ fatura.0 }}</td>
+          <td>{{ fatura.1 }}</td>
+          <td>{{ fatura.2 }}</td>
+          <td>{{ fatura.3 }}</td>
+          <td>{{ fatura.4 }}</td>
+          <td>{{ fatura.5 }}</td>
+          <td>{{ fatura.6 }}</td>
+          <td>{{ fatura.7 }}</td>
+          <td>{{ fatura.8 }}</td>
+          <td>{{ fatura.9 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

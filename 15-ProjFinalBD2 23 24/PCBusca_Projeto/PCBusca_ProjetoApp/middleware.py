@@ -12,7 +12,7 @@ class TokenMiddleware:
         # Check if loginToken is present in the request
         if 'loginToken' not in request.COOKIES:
             # Exclude certain URLs from the check
-            excluded_urls = [reverse('login'), reverse('index')]
+            excluded_urls = [reverse('login'), reverse('index'), reverse('registerPage')]
             current_url = request.path
 
             if current_url not in excluded_urls:
